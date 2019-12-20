@@ -17,9 +17,34 @@ class Pokemon():
                                                                                       self.attackOne, self.attackTwo,
                                                                                       self.attackThree)
 
+#LIST OF POKEMON - instances
+charmander = Pokemon("Charmander", 100,"Fire", "whip", "blaze", "shock")
+bulbasaur = Pokemon("Bulbasaur",100, "Leaf", "vine", "levitate", "run away")
+squirtle = Pokemon("Squirtle",100, "Water", "hydro pump", "final smash", "triple finish")
+
+pokemons = [charmander, bulbasaur, squirtle]
+
 class Player(Pokemon):
     def __init__(self, name="", health=100, kind="", attackOne="", attackTwo="", attackThree=""):
         super().__init__(name, health, kind, attackOne, attackTwo, attackThree)
+
+    def selectPokemon(self):
+        checkPokemon = True
+
+        for pokemonIndex in range(len(pokemons)):
+            print(str(pokemonIndex+1) + ": " + pokemons[pokemonIndex].name)
+
+        while checkPokemon:
+            pokemonChosen = int(input("Choose a pokemon: "))
+            try:
+                if pokemonChosen > 0 and pokemonChosen <= (len(pokemons)):
+                    return pokemons[pokemonChosen - 1] #print out pokemon at index of chosen pokemon (1,2,3)
+                    checkPokemon = False
+                else:
+                    raise AssertionError
+            except AssertionError:
+                print("Incorrect input. Please enter the # for one of the pokemons above.")
+                checkPokemon = True
 
 
 class Enemy(Pokemon):
@@ -27,7 +52,7 @@ class Enemy(Pokemon):
         super().__init__(name, health, kind, attackOne, attackTwo, attackThree)
 
     #Enemy chooses pokemon at random
-    def choosePokemon(self):
+    def randomPokemonSelected(self):
         pokemonChosen = random.choice(pokemons)
 
         nameOfPokemon = pokemonChosen.name
@@ -36,27 +61,14 @@ class Enemy(Pokemon):
 
         return pokemonChosen
 
-#LIST OF POKEMON - instances
-charmander = Pokemon("Charmander", 100,"Fire", "whip", "blaze", "shock")
-bulbasaur = Pokemon("Bulbasaur",100, "Leaf", "vine", "levitate", "run away")
-squirtle = Pokemon("Squirtle",100, "hydro pump", "final smash", "triple finish")
-
-pokemons = [charmander, bulbasaur, squirtle]
-
-'''
-1)	AI GENEREATES random Pokemon ():
-•	CHOOSES from Pokemon Instances LIST (RANDOM)
-•	PRINT AI's Pokemon chosen (indexed)
-•	RETURN Pokemon chosen (INSTANCE)
-'''
-
-#create instance of an enemy - takes new enemy, and prints out it's information
+#ENEMY CHOOSES POKEMON: create instance of an enemy - takes new enemy, and prints out it's information
 enemyOne = Enemy()
-
-enemyPokemon = Enemy.choosePokemon(enemyOne)
-
+enemyPokemon = Enemy.randomPokemonSelected(enemyOne)
 print(enemyPokemon.playerInfo()) #derives from Pokemon() object
 
-
-
+#PLAYER CHOOSES POKEMON: create instance of an enemy - takes new enemy, and prints out it's information
+print("\n")
+humPlayer = Player()
+playerPokemon = Player.selectPokemon(humPlayer)
+print(playerPokemon.playerInfo())
 
