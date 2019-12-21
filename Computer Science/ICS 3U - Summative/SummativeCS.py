@@ -1,6 +1,7 @@
 # CLASS OBJECTS
 import random
 
+
 class Pokemon():
     def __init__(self, name="None", health=100, kind="None", attackOne="None", attackTwo="None", attackThree="None"):
         self.allPokemon = []
@@ -12,10 +13,13 @@ class Pokemon():
         self.attackThree = attackThree
 
     def playerInfo(self):
-        return '* Player Info *\nName: {}\nHealth: {}\nType: {}\nAttack 1: {}\nAttack 2: {}\nAttack 3: {}\n'.format(self.name,
-                                                                                      self.health, self.kind,
-                                                                                      self.attackOne, self.attackTwo,
-                                                                                      self.attackThree)
+        return '* Player Info *\nName: {}\nHealth: {}\nType: {}\nAttack 1: {}\nAttack 2: {}\nAttack 3: {}\n'.format(
+            self.name,
+            self.health, self.kind,
+            self.attackOne, self.attackTwo,
+            self.attackThree)
+
+
 # LIST OF POKEMON - instances
 charmander = Pokemon("Charmander", 100, "Fire", "Flamethrower", "Fire Spin", "Cast Inferno")
 bulbasaur = Pokemon("Bulbasaur", 100, "Grass", "Vine Whip", "Leech Seed", "Cast Razor Leaf")
@@ -49,6 +53,7 @@ class Player(Pokemon):
             except ValueError:
                 print("Incorrect value type. Please enter one of the numbers above.")
 
+
 class Enemy(Pokemon):
     def __init__(self, name="", health=100, kind="", attackOne="", attackTwo="", attackThree=""):
         super().__init__(name, health, kind, attackOne, attackTwo, attackThree)
@@ -63,6 +68,62 @@ class Enemy(Pokemon):
 
         return pokemonChosen
 
+# PROCESS behind attack effect on health and damage to other pokemon - (turn into sep. func)
+def attackOutcome(attackChoice, pokemonSIDED, pokemonOPPOSING):
+    attackChosen = attackChoice
+    opposingPokemon = pokemonOPPOSING #for player - opposingPokemon = 'enemy'... for enemny - opposingPokemon = 'player'
+    pokemonOnSide = pokemonSIDED
+    newPlayerHealth = pokemonSIDED.health #initalize health of player
+    newEnemyHealth = pokemonOPPOSING.health #initalize health of enemy
+
+
+    # Moderate Damage:
+    if attackChosen == 1:
+        attackDamage = random.randint(18, 25)
+        newEnemyHealth = opposingPokemon.health - attackDamage  # reduces enemy's health by amount
+        opposingPokemon.health = newEnemyHealth
+        if attackDamage >= 20:
+            print("The attack is very effective!")
+        # attack is 19 or below
+        else:
+            print("The attack is not very effective...")
+
+        print("Health has been decreased by:", attackDamage, "to:", newEnemyHealth)
+
+    # High Range Damage:
+    elif attackChosen == 2:
+        attackDamage = random.randint(10, 35)
+        newEnemyHealth = opposingPokemon.health - attackDamage  # reduces enemy's health by amount
+        opposingPokemon.health = newEnemyHealth
+
+        if attackDamage >= 30:
+            print("The attack is extremely effective!")
+        elif attackDamage >= 20:
+            print("The attack is very effective!")
+        else:
+            print("The attack is not very effective...")
+
+        print("Health has been decreased by:", attackDamage, "to:", newEnemyHealth)
+
+    # CAST - increase player's hp by moderate amount
+    elif attackChosen == 3:
+        if pokemonOnSide.health >= 100:
+            print("Cast is not effective. You are already at the max health.")
+        else:
+            cast = random.randint(18, 25)
+            newPlayerHealth = pokemonOnSide.health + cast
+            pokemonOnSide.health = newPlayerHealth
+
+            if cast >= 20:
+                print("The cast was very effective!")
+            else:
+                print("The cast was not very effective...")
+
+            print("The cast has healed the health by:", cast, "to:", newPlayerHealth)
+
+    return newPlayerHealth, newEnemyHealth # now in 'Battle' can use attacks to check
+    # if either health has reached zero yet in order to choose winner
+
 def playerAttack(pChosenPokemon):
     checkAttack = True
     # playerPokemon - assigns parameter as chosen pokemon object
@@ -72,18 +133,18 @@ def playerAttack(pChosenPokemon):
     attack3 = pChosenPokemon.attackThree
     attackList = [attack1, attack2, attack3]
 
-    #Display attacks for chosen Pokemon for current battle
+    # Display attacks for chosen Pokemon for current battle
     for attackIndex in range(len(attackList)):
         print(str(attackIndex + 1) + ":", attackList[attackIndex])
 
-    #check for correct INPUT for attack:
+    # check for correct INPUT for attack:
     while checkAttack:
         try:
             attackChosen = int(input("Choose an attack: "))
             if attackChosen > 0 and attackChosen <= (len(attackList)):
                 print("Attack chosen:", attackList[attackChosen - 1])
                 checkAttack = False
-                #return attackList[attackChosen - 1]  # print out pokemon at index of chosen pokemon (1,2,3)
+                # return attackList[attackChosen - 1]  # print out pokemon at index of chosen pokemon (1,2,3)
             else:
                 raise AssertionError
 
@@ -93,89 +154,21 @@ def playerAttack(pChosenPokemon):
         except ValueError:
             print("Incorrect value type. Please enter one of the #'s above.")
 
-    # PROCESS behind attack effect on health and damage to other pokemon - (turn into sep. func)
-
-    # Moderate Damage:
-    if attackChosen == 1:
-        attackDamage = random.randint(18, 25)
-        newEnmyHealth = enemyPokemon.health - attackDamage # reduces enemy's health by amount
-        enemyPokemon.health = newEnmyHealth
-        if attackDamage >= 20:
-            print("The attack is very effective!")
-        # attack is 19 or below
-        else:
-            print("The attack is not very effective...")
-
-        print("You have decreased the enemy's health by:", attackDamage, "to:", newEnmyHealth)
-
-    # High Range Damage:
-    elif attackChosen == 2:
-        attackDamage = random.randint(10, 35)
-        newEnmyHealth = enemyPokemon.health - attackDamage  # reduces enemy's health by amount
-        enemyPokemon.health = newEnmyHealth
-
-        if attackDamage >= 30:
-            print("The attack is extremely effective!")
-        elif attackDamage >= 20:
-            print("The attack is very effective!")
-        else:
-            print("The attack is not very effective...")
-
-        print("You have decreased the enemy's health by:", attackDamage, "to:", newEnmyHealth)
-
-    '''
-    #CAST - increase player's hp by moderate amount 
-    elif attackChosen == 3:
-        attackDamage = random.randint()
-    '''
+    attackOutcome(attackChosen, playerPokemon, enemyPokemon)
 
 
+def enemyAttack(eChosenPokemon):
 
+    #only need to index attacks in order to choose option
+    enemyAttackList = [1,2,3]
 
+    enemyAttackChosen = random.choice(enemyAttackList)
 
+    attackOutcome(enemyAttackChosen, enemyPokemon, playerPokemon)
 
+    #TO FINISH - increase enemy's ability to cast more based on hp level....
 
-
-
-
-'''
-#Either player or enemy's turn in the battle. (CURRENT ATTACK) 
-#take's player's chosen pokemon and extracts attacks
-
-Attack Chosen (attk):
-
-DECISIONS:
-•	IF chooses FIRST attack:
-	Moderate DAMAGE randomly assigned (18-25 HP)
-	Opponent's HP DECREASES by DAMAGE
-
-IF chooses SECOND attack:
-	High Range DAMAGE randomly chosen (10 - 35 ) to opponent's HP
-	Opponent's HP DECREASES by DAMAGE
-
-If chooses THIRD attack:
-	PRINT cast has been called
-	CAST randomly assigned moderate amount  (18-25 HP)
-	Player's HP increases by CAST
-
-IF DAMAGE is GREATER than 20:
-	PRINT attack is effective
-•	ELSE:
-	PRINT attack not effective
-
-PRINT player's HEALTH and opponent's HEALTH
-RETURN Player's HEALTH and Opponent's HEALTH
-
-'''
-
-
-
-
-
-
-
-
-#MAIN PROGRAM
+# MAIN PROGRAM
 # ENEMY CHOOSES POKEMON: create instance of an enemy - takes new enemy, and prints out it's information
 enemyPlayer = Enemy()
 enemyPokemon = Enemy.randomPokemonSelected(enemyPlayer)
@@ -187,8 +180,12 @@ playerPokemon = Player.selectPokemon(humPlayer)
 print(playerPokemon.playerInfo())
 print("\n")
 
+print("PLAYER'S TURN \n")
 playerAttack(playerPokemon)  # selected
-playerAttack(playerPokemon)  # selected
+
+print("ENEMY'S TURN")
+enemyAttack(enemyPokemon)
 
 
 print(enemyPokemon.playerInfo())
+print(playerPokemon.playerInfo())
