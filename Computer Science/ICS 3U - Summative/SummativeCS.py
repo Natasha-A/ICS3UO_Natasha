@@ -180,68 +180,63 @@ def enemyAttack(eChosenPokemon):
     attackOutcome(enemyAttackChosen, enemyPokemon, playerPokemon)
 
 def checkHealth(playerHealth, enemyHealth):
-    # one of the players have reached a health of 0 (TURN INTO FUNCTION****)
-    if playerHealth <= 0 or enemyHealth <= 0:
-        if playerHealth > enemyHealth:  # player has won
-            return winner = "Player"
+    # one of the players have reached a health of 0 ...
+    continueAttacks = True
+    while True: #not needed? always breaking***
+        if playerHealth <= 0 or enemyHealth <= 0:
+            if playerHealth > enemyHealth:  # player has won
+                #print("The winner of the battle is:", playerTurn.name, "!")
+                winner = "player"
+                break
+                # multiple situations where breaking out of the while loop in necessary. Thus in order to avoid
+                # overwriting the boolean state further in function, break used to dismiss loop on command.
+
+            else:  # enemy has won
+                #print("The winner of the battle is:", enemyTurn.name, "!")
+                winner = "enemy"
+                break
+        else:
+            print("**Battle Continues**")
+            winner = "none"
             break
 
-        else:  # enemy has won
-            print("The winner of the battle is:", enemyTurn.name, "!")
-            return winner = "Enemy"
-            break
-    else:
-        print("**Battle Continues**")
-
-
-
+    return winner
 
 def battle(PlayerPokemon, EnemyPokemon):
     runBattle = True
     playerTurn = PlayerPokemon
     enemyTurn = EnemyPokemon
+    #continueBattle = True
+    # create new instance of playerTurn and EnemyTurn for each round
+    #round 1 - player goes first
+    print("PLAYER'S TURN \n")
+    playerAttack(playerTurn) #FINISH$$$$$$$$$$$$
+    winner = checkHealth(playerTurn.health, enemyTurn.health)
 
-    while runBattle:
-        #create new instance of playerTurn and EnemyTurn for each round
+    if winner == "player":
+        print("YOU HAVE WON!")
+        break
+    elif winner == "enemy":
+        print("THE COMPUTER HAS WON!")
+        break
+    else:
+        print("There is no winner, continue playing............")
 
-        #round 1 - player goes first
-        print("PLAYER'S TURN \n")
-        playerAttack(playerTurn)
 
-        # one of the players have reached a health of 0 (TURN INTO FUNCTION****)
-        if playerTurn.health <= 0 or enemyTurn.health <= 0:
-            if playerTurn.health > enemyTurn.health:  # player has won
-                print("The winner of the battle is:", playerTurn.name, "!")
-                break
 
-            else:  # enemy has won
-                print("The winner of the battle is:", enemyTurn.name, "!")
-                break
-        else:
-            print("**Battle Continues**")
 
-        time.sleep(2) #delay for user to view results
 
-        print("ENEMY'S TURN")
-        #round 1 - enemy goes second
-        enemyAttack(enemyTurn)
 
-        # one of the players have reached a health of 0
-        if playerTurn.health <= 0 or enemyTurn.health <= 0:
-            if playerTurn.health > enemyTurn.health:  # player has won
-                print("The winner of the battle is:", playerTurn.name, "!")
-                break
+    time.sleep(2) #delay for user to view results
 
-            else:  # enemy has won
-                print("The winner of the battle is:", enemyTurn.name, "!")
-                break
-        else:
-            runBattle = True
-            print("**Battle Continues**")
+    print("ENEMY'S TURN")
+    #round 1 - enemy goes second
+    enemyAttack(enemyTurn)
+    checkHealth(playerTurn.health, enemyTurn.health)
 
-            #At the end of each of the player's and enemy's attack display total information
-            print(playerPokemon.playerInfo())
-            print(enemyPokemon.playerInfo())
+    #At the end of each of the player's and enemy's attack display total information
+    print(playerPokemon.playerInfo())
+    print(enemyPokemon.playerInfo())
 
 '''
 RUN BATTLE (Player, Enemy):
