@@ -1,6 +1,5 @@
 # CLASS OBJECTS
-import random
-
+import random, time
 
 class Pokemon():
     def __init__(self, name="None", health=100, kind="None", attackOne="None", attackTwo="None", attackThree="None"):
@@ -158,15 +157,36 @@ def playerAttack(pChosenPokemon):
 
 
 def enemyAttack(eChosenPokemon):
+    # only need to index attacks in order to choose option
 
-    #only need to index attacks in order to choose option
-    enemyAttackList = [1,2,3]
+    if eChosenPokemon.health <= 35:
+        enemyAttackList = [1,2,3,3,3,] #Increase chances of enemy choosing cast when HP is at a low level:
+
+    else:
+        enemyAttackList = [1, 2, 3]
 
     enemyAttackChosen = random.choice(enemyAttackList)
+    print("Attack chosen:", enemyAttackChosen)
 
     attackOutcome(enemyAttackChosen, enemyPokemon, playerPokemon)
 
-    #TO FINISH - increase enemy's ability to cast more based on hp level....
+'''
+RUN BATTLE (Player, Enemy):
+#Continuous Loop that alternates between user player and AI player
+REPETITION:
+While TRUE:
+ASSIGN pHlth and oHlth to  Player'sTurn():
+	If pHlth less than 0 or eHlth less than 0:
+•	RUN FALSE (battle ends)
+
+ASSIGN pHlth and oHlth = EnemysTurn():
+	If pHlth less than 0 or eHth less than 0:
+•	RUN FALSE (battle ends)
+
+Else:
+Run TRUE
+'''
+
 
 # MAIN PROGRAM
 # ENEMY CHOOSES POKEMON: create instance of an enemy - takes new enemy, and prints out it's information
@@ -174,18 +194,22 @@ enemyPlayer = Enemy()
 enemyPokemon = Enemy.randomPokemonSelected(enemyPlayer)
 print(enemyPokemon.playerInfo())  # derives from Pokemon() object
 print("\n")
+
 # PLAYER CHOOSES POKEMON: create instance of an enemy - takes new enemy, and prints out it's information
 humPlayer = Player()
 playerPokemon = Player.selectPokemon(humPlayer)
 print(playerPokemon.playerInfo())
 print("\n")
 
+#BATTLE BEGINS
 print("PLAYER'S TURN \n")
 playerAttack(playerPokemon)  # selected
-
+time.sleep(2)
 print("ENEMY'S TURN")
 enemyAttack(enemyPokemon)
 
-
+#FIRST ROUND INFO:
 print(enemyPokemon.playerInfo())
 print(playerPokemon.playerInfo())
+
+
