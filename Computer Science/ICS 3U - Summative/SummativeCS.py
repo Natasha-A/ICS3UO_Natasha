@@ -12,13 +12,15 @@ class Pokemon():
         self.attackThree = attackThree
 
     def playerInfo(self):
-        return '* Player Info *\nName: {}\nHealth: {}\nType: {}\nAttack 1: {}\nAttack 2: {}\nAttack 3: {}\n'.format(
+        return '-- Player Info --\nName: {}\nHealth: {}\nType: {}\nAttack 1: {}\nAttack 2: {}\nAttack 3: {}\n'.format(
             self.name,
             self.health, self.kind,
             self.attackOne, self.attackTwo,
             self.attackThree)
 
 
+#can turn into function (SUPER CLASS STATIC METHOD?)
+# which returns list of pokemons to implement into player and enemy classes
 # LIST OF POKEMON - instances
 charmander = Pokemon("Charmander", 50, "Fire", "Flamethrower", "Fire Spin", "Cast Inferno")
 bulbasaur = Pokemon("Bulbasaur", 50, "Grass", "Vine Whip", "Leech Seed", "Cast Razor Leaf")
@@ -195,15 +197,13 @@ def checkHealth(playerHealth, enemyHealth):
     while True: #not needed? always breaking***
         if playerHealth <= 0 or enemyHealth <= 0:
             if playerHealth > enemyHealth:  # player has won
-                #print("The winner of the battle is:", playerTurn.name, "!")
-                winner = "player"
+                winner = "player" #turn into enums?*****
                 enemyPlayer.health = 0
                 break
                 # multiple situations where breaking out of the while loop in necessary. Thus in order to avoid
                 # overwriting the boolean state further in function, break used to dismiss loop on command.
 
             else:  # enemy has won
-                #print("The winner of the battle is:", enemyTurn.name, "!")
                 winner = "enemy"
                 humPlayer.health = 0
 
@@ -257,55 +257,47 @@ def battle(PlayerPokemon, EnemyPokemon):
         else:
             print("There is no winner, continue playing............")
 
-'''
-RUN BATTLE (Player, Enemy):
-#Continuous Loop that alternates between user player and AI player
-REPETITION:
-While TRUE:
-ASSIGN pHlth and oHlth to  Player'sTurn():
-	If pHlth less than 0 or eHlth less than 0:
-•	RUN FALSE (battle ends)
-
-ASSIGN pHlth and oHlth = EnemysTurn():
-	If pHlth less than 0 or eHth less than 0:
-•	RUN FALSE (battle ends)
-
-Else:
-Run TRUE
-'''
-
-
 # MAIN PROGRAM
 # ENEMY CHOOSES POKEMON: create instance of an enemy - takes new enemy, and prints out it's information
 enemyPlayer = Enemy() #****GETS CHOSEN IN PLAY GAME FUNCTION ******
 enemyPokemon = Enemy.randomPokemonSelected(enemyPlayer)
-'''
-print(enemyPokemon.playerInfo())  # derives from Pokemon() object
-print("\n")
-'''
 
 # PLAYER CHOOSES POKEMON: create instance of an enemy - takes new enemy, and prints out it's information
 humPlayer = Player()
 playerPokemon = Player.selectPokemon(humPlayer) #done in playGame()
 
-'''
-print(playerPokemon.playerInfo())
-print("\n")
-'''
-
 battle(playerPokemon, enemyPokemon) #repeats until health of a player is zero
 
 '''
-#BATTLE BEGINS
-print("PLAYER'S TURN \n")
-playerAttack(playerPokemon)  # selected
-time.sleep(2)
-print("ENEMY'S TURN")
-enemyAttack(enemyPokemon)
-'''
+New battle continues repeating until either player’s health is zero
+Play Game():
+Continue Playing = TRUE
+WHILE CONTINUE PLAYING:
+***ASSIGN NEW PLAYER and ITS POKEMON, and ENEMY and ITS POKEMON: ***
+# ENEMY CHOOSES POKEMON: create instance of an enemy - takes new enemy, and prints out it's information
+enemyPlayer = Enemy() #****GETS CHOSEN IN PLAY GAME FUNCTION ******
+enemyPokemon = Enemy.randomPokemonSelected(enemyPlayer)
+print(enemyPokemon.playerInfo())  # derives from Pokemon() object
+print("\n")
 
-'''
-#FIRST ROUND INFO:
-print(enemyPokemon.playerInfo())
+# PLAYER CHOOSES POKEMON: create instance of an enemy - takes new enemy, and prints out it's information
+humPlayer = Player()
+playerPokemon = Player.selectPokemon(humPlayer)
 print(playerPokemon.playerInfo())
+print("\n")
+
+
+CALL BATTLE(Player'sTurn(), EnemyTurn())
+
+PRINT “Would you like to play again?”
+
+	IF “yes”
+		Continue Playing = TRUE
+
+	If “no”
+		Continue Playing = FALSE
+		PRINT “Game ended”
+
+MAIN PROGRAM
+PlayGame()
 '''
