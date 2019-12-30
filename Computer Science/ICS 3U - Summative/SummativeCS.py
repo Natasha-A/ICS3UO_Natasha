@@ -2,7 +2,6 @@
 import random
 import time
 
-
 class Pokemon():
     def __init__(self, name="None", health=50, kind="None", attackOne="None", attackTwo="None", attackThree="None"):
         self.allPokemon = []
@@ -40,6 +39,8 @@ class Player(Pokemon):
     def __init__(self, name="None", health=50, kind="None", attackOne="None", attackTwo="None", attackThree="None"):
         super().__init__(name, health, kind, attackOne, attackTwo, attackThree)
 
+    #create property for number of wins?
+
     @staticmethod
     def selectPokemon(self):
         checkPokemon = True
@@ -52,6 +53,7 @@ class Player(Pokemon):
             try:
                 pokemonChosen = int(input("Choose a pokemon: "))
                 if pokemonChosen > 0 and pokemonChosen <= (len(pokemons)):
+                    print("You have chosen the pokemon:", pokemons[pokemonChosen -1].name)
                     return pokemons[pokemonChosen - 1]  # print out pokemon at index of chosen pokemon (1,2,3)
                 else:
                     raise AssertionError
@@ -68,14 +70,15 @@ class Enemy(Pokemon):
         super().__init__(name, health, kind, attackOne, attackTwo, attackThree)
 
     # Enemy chooses pokemon at random
+    @staticmethod
     def randomPokemonSelected(self):
         pokemons = pokemonList()
         pokemonChosen = random.choice(pokemons)
 
         nameOfPokemon = pokemonChosen.name
 
-        print("Enemy is choosing its pokemon...")
-        print("The random choice chosen is", nameOfPokemon)
+        print("Enemy Trainer is choosing its pokemon...")
+        print("The Pokemon chosen by the Trainer is:", nameOfPokemon)
 
         return pokemonChosen
 
@@ -105,6 +108,7 @@ def attackOutcome(attackChoice, pokemonSIDED, pokemonOPPOSING):  # eg when Playe
 
         if opposingPokemon.health < 0:  # if health has been reduced negative, it will be capped to value of 0
             opposingPokemon.health = 0
+            print(opposingPokemon.name, "has fainted!")
 
         print("Health has been decreased by:", attackDamage, "to:", opposingPokemon.health)
 
@@ -126,6 +130,8 @@ def attackOutcome(attackChoice, pokemonSIDED, pokemonOPPOSING):  # eg when Playe
 
         if opposingPokemon.health < 0:  # if health has been reduced negative, it will be capped to value of 0
             opposingPokemon.health = 0
+            print(opposingPokemon.name, "has fainted!")
+
 
         print("Health has been decreased by:", attackDamage, "to:", opposingPokemon.health)
 
@@ -148,10 +154,11 @@ def attackOutcome(attackChoice, pokemonSIDED, pokemonOPPOSING):  # eg when Playe
 
             if newPlayerHealth < 0:  # if health has been reduced negative, it will be capped to value of 0
                 pokemonOnSide.health = 0
+                print(opposingPokemon.name, "has fainted!")
 
             print("The cast has healed the health by:", cast, "to:", pokemonOnSide.health)
 
-    return newPlayerHealth, newEnemyHealth  # now in 'Battle' can use attacks to check (**NOT USED?)
+    return newPlayerHealth, newEnemyHealth
     # if either health has reached zero yet in order to choose winner
 
 
@@ -276,9 +283,10 @@ def playGame():
     continueCheckingForInput = True
 
     while newRound:
-
+        # GLOBAL VARIABLES
         # need to access objects as global variables in order to be modified by other functions such as during
         # battles and attacks
+
         global enemyPlayer
         enemyPlayer = Enemy()
         global enemyPokemon
