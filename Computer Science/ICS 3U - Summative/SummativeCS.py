@@ -29,7 +29,6 @@ def pokemonList():
     charmander = Pokemon("Charmander", 50, "Fire", "Flamethrower", "Fire Spin", "Cast Inferno")
     bulbasaur = Pokemon("Bulbasaur", 50, "Grass", "Vine Whip", "Leech Seed", "Cast Razor Leaf")
     squirtle = Pokemon("Squirtle", 50, "Water", "Rapid Spin", "Aqua Tail", "Cast Hydro Pump")
-
     pokemons = [charmander, bulbasaur, squirtle]
 
     return pokemons
@@ -83,6 +82,20 @@ class Enemy(Pokemon):
         return pokemonChosen
 
 
+'''
+(CREATE FUNCTION TO CALL FOR ATTACK OUTCOMES… )
+barHealth(health):
+	barAmount = ""
+	
+	roundedHealth = health // 10 
+	
+	barAmount = "=" * roundedHealth 
+	
+	Bar health = print("HP:",barAmount)
+	
+Return barHealth 
+
+'''
 # PROCESS behind attack effect on health and damage to other pokemon
 def attackOutcome(attackChoice, pokemonSIDED, pokemonOPPOSING):  # eg when Player's Turn: pPokemon = pokemonSIDED
     # ePokemon = pokemonOPPOSING
