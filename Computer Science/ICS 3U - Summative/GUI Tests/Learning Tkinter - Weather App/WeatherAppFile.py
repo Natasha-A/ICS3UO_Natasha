@@ -5,6 +5,8 @@ import tkinter as tk
 HEIGHT = 700
 WIDTH = 800
 
+def getWeather():
+    print("This is the entry:", entry)
 #root window
 root = tk.Tk()
 
@@ -12,6 +14,12 @@ root = tk.Tk()
 #creating a canvas (size dimensions of screen) - goes into root
 canvas = tk.Canvas(root, height = HEIGHT, width = WIDTH)
 canvas.pack() #displays canvas
+
+#CREATING BACKGROUND
+backgroundImage = tk.PhotoImage(file="landscape.png")
+backgroundLabel = tk.Label(root, image=backgroundImage) #places in root,
+#which is the entire screen
+backgroundLabel.place(relwidth=1, relheight=1)
 
 #organizing widgets - frame
 frame = tk.Frame(root, bg="#80c1ff")
@@ -27,7 +35,8 @@ frame.place(relx = 0.5, rely = 0.1, relwidth=0.75, relheight=0.1, anchor="n") #f
 entry = tk.Entry(frame, font=40)
 entry.place(relwidth=0.65, relheight=1) #fills the entire box as 1
 
-button = tk.Button(frame, text="Test Button", font=40) #display in frame
+#USING LAMDA - inline function temporary store memory to update and refine
+button = tk.Button(frame, text="Get Weather", font=40, command=Lambda:getWeather(entry.get())) #39.35
 button.place(relx=0.7, relwidth=0.3,relheight=1) #fills rest of screen
 
 #lower frame - below entry and button
