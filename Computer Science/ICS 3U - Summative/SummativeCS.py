@@ -2,43 +2,46 @@
 import random
 import time
 
+
 class Pokemon():
-    def __init__(self, name="None", health=50, kind="None", attackOne="None", attackTwo="None", attackThree="None"):
+    def __init__(self, name="None", health=100, healthBars="==========", kind="None", attackOne="None", attackTwo="None",
+                 attackThree="None"):
         self.allPokemon = []
         self.name = name
         self.health = health
+        self.healthBars = healthBars
         self.kind = kind
         self.attackOne = attackOne
         self.attackTwo = attackTwo
         self.attackThree = attackThree
 
     def playerInfo(self):
-        return '-- Player Info --\nName: {}\nHealth: {}\nType: {}\nAttack 1: {}\nAttack 2: {}\nAttack 3: {}\n'.format(
+        return '-- Player Info --\nName: {}\nHealth: {}\nHP: {}\nType: {}\nAttack 1: {}\nAttack 2: {}\nAttack 3: {}\n'.format(
             self.name,
-            self.health, self.kind,
-            self.attackOne, self.attackTwo,
+            self.health,
+            self.healthBars,
+            self.kind,
+            self.attackOne,
+            self.attackTwo,
             self.attackThree)
 
 
-# can turn into function (SUPER CLASS STATIC METHOD?)
-# which returns list of pokemons to implement into player and enemy classes
-# LIST OF POKEMON - instances
-
 def pokemonList():
-    #**stores all instances of existing pokemon - can create seperate functions for enemy pokemon and player pokemon
-    charmander = Pokemon("Charmander", 50, "Fire", "Flamethrower", "Fire Spin", "Cast Inferno")
-    bulbasaur = Pokemon("Bulbasaur", 50, "Grass", "Vine Whip", "Leech Seed", "Cast Razor Leaf")
-    squirtle = Pokemon("Squirtle", 50, "Water", "Rapid Spin", "Aqua Tail", "Cast Hydro Pump")
+    #*stores all instances of existing pokemon - can create seperate functions for enemy pokemon and player pokemon
+    charmander = Pokemon("Charmander",100, "==========", "Fire", "Flamethrower", "Fire Spin", "Cast Inferno")
+    bulbasaur = Pokemon("Bulbasaur", 100, "==========", "Grass", "Vine Whip", "Leech Seed", "Cast Razor Leaf")
+    squirtle = Pokemon("Squirtle",  100, "==========", "Water", "Rapid Spin", "Aqua Tail", "Cast Hydro Pump")
     pokemons = [charmander, bulbasaur, squirtle]
 
     return pokemons
 
 
 class Player(Pokemon):
-    def __init__(self, name="None", health=50, kind="None", attackOne="None", attackTwo="None", attackThree="None"):
-        super().__init__(name, health, kind, attackOne, attackTwo, attackThree)
+    def __init__(self, name="None", health=100, healthBars="=====", kind="None", attackOne="None", attackTwo="None",
+                 attackThree="None"):
+        super().__init__(name, health, healthBars, kind, attackOne, attackTwo, attackThree)
 
-    #create property for number of wins?
+    # create property for number of wins?
 
     @staticmethod
     def selectPokemon(self):
@@ -52,7 +55,7 @@ class Player(Pokemon):
             try:
                 pokemonChosen = int(input("Choose a pokemon: "))
                 if pokemonChosen > 0 and pokemonChosen <= (len(pokemons)):
-                    print("You have chosen the pokemon:", pokemons[pokemonChosen -1].name)
+                    print("You have chosen the pokemon:", pokemons[pokemonChosen - 1].name)
                     return pokemons[pokemonChosen - 1]  # print out pokemon at index of chosen pokemon (1,2,3)
                 else:
                     raise AssertionError
@@ -65,8 +68,9 @@ class Player(Pokemon):
 
 
 class Enemy(Pokemon):
-    def __init__(self, name="", health=50, kind="", attackOne="", attackTwo="", attackThree=""):
-        super().__init__(name, health, kind, attackOne, attackTwo, attackThree)
+    def __init__(self, name="None", health=100, healthBars="=====", kind="None", attackOne="None", attackTwo="None",
+                 attackThree="None"):
+        super().__init__(name, health, healthBars, kind, attackOne, attackTwo, attackThree)
 
     # Enemy chooses pokemon at random
     @staticmethod
@@ -82,27 +86,28 @@ class Enemy(Pokemon):
         return pokemonChosen
 
 
-'''
-(CREATE FUNCTION TO CALL FOR ATTACK OUTCOMES… )
-barHealth(health):
-	barAmount = ""
-	
-	roundedHealth = health // 10 
-	
-	barAmount = "=" * roundedHealth 
-	
-	Bar health = print("HP:",barAmount)
-	
-Return barHealth 
+def barHealth(health):
+    roundedHealth = health // 10  # splits health into bars
 
-'''
+    if health >= 10:
+        barAmount = "=" * roundedHealth
+    elif health < 10 and health > 0:
+        barAmount = "="
+    else:  # health has reached zero
+        barAmount = ""
+
+    print("HP:", barAmount)
+
+    return barAmount
+
+
 # PROCESS behind attack effect on health and damage to other pokemon
 def attackOutcome(attackChoice, pokemonSIDED, pokemonOPPOSING):  # eg when Player's Turn: pPokemon = pokemonSIDED
     # ePokemon = pokemonOPPOSING
     attackChosen = attackChoice
     opposingPokemon = pokemonOPPOSING  # for player - opposingPokemon = 'enemy'... for enemny - opposingPokemon = 'player'
     pokemonOnSide = pokemonSIDED
-    newPlayerHealth = pokemonSIDED.health  # i nitalize health of player
+    newPlayerHealth = pokemonSIDED.health  # initalize health of player
     newEnemyHealth = pokemonOPPOSING.health  # initalize health of enemy
 
     # Moderate Damage:
@@ -110,6 +115,8 @@ def attackOutcome(attackChoice, pokemonSIDED, pokemonOPPOSING):  # eg when Playe
         attackDamage = random.randint(18, 25)
         newEnemyHealth = opposingPokemon.health - attackDamage  # reduces enemy's health by amount
         opposingPokemon.health = newEnemyHealth
+        opposingPokemon.healthBars = barHealth(newEnemyHealth)
+
         if attackDamage >= 20:
             print("The attack is very effective!")
         # attack is 19 or below
@@ -125,11 +132,13 @@ def attackOutcome(attackChoice, pokemonSIDED, pokemonOPPOSING):  # eg when Playe
 
         print("Health has been decreased by:", attackDamage, "to:", opposingPokemon.health)
 
+
     # High Range Damage:
     elif attackChosen == 2:
         attackDamage = random.randint(10, 35)
         newEnemyHealth = opposingPokemon.health - attackDamage  # reduces enemy's health by amount
         opposingPokemon.health = newEnemyHealth
+        opposingPokemon.healthBars = barHealth(newEnemyHealth)
 
         if attackDamage >= 30:
             print("The attack is extremely effective!")
@@ -145,7 +154,6 @@ def attackOutcome(attackChoice, pokemonSIDED, pokemonOPPOSING):  # eg when Playe
             opposingPokemon.health = 0
             print(opposingPokemon.name, "has fainted!")
 
-
         print("Health has been decreased by:", attackDamage, "to:", opposingPokemon.health)
 
     # CAST - increase player's hp by moderate amount
@@ -156,6 +164,7 @@ def attackOutcome(attackChoice, pokemonSIDED, pokemonOPPOSING):  # eg when Playe
             cast = random.randint(18, 25)
             newPlayerHealth = pokemonOnSide.health + cast
             pokemonOnSide.health = newPlayerHealth
+            pokemonOnSide.healthBars = barHealth(newEnemyHealth)
 
             if cast >= 20:
                 print("The cast was very effective!")
@@ -238,7 +247,6 @@ def checkHealth(playerHealth, enemyHealth):
             else:  # enemy has won
                 winner = "enemy"
                 humPlayer.health = 0
-
                 break
         else:
             winner = "none"
@@ -278,8 +286,8 @@ def battle(PlayerPokemon, EnemyPokemon):
 
         print("\n")
         # At the end of each of the player's and enemy's attack display total information
-        print("PLAYER:\n" + str(playerTurn.playerInfo()), sep="\n")
-        print("ENEMY:\n" + str(enemyTurn.playerInfo()), sep="\n")
+        print("PLAYER:\n" + str(enemyPokemon.playerInfo()), sep="\n")
+        print("ENEMY:\n" + str(playerPokemon.playerInfo()), sep="\n")
 
         if winner == "player":
             print("YOU HAVE WON!")
@@ -287,7 +295,7 @@ def battle(PlayerPokemon, EnemyPokemon):
         elif winner == "enemy":
             print("THE COMPUTER HAS WON!")
             break
-        #otherwise the game continues to be played...
+        # otherwise the game continues to be played...
 
 
 def playGame():
@@ -333,5 +341,6 @@ def playGame():
                 print("Incorrect input. Please enter 'yes' or 'no'.")
                 continueCheckingForInput = True
 
-#MAIN PROGRAM
+
+# MAIN PROGRAM
 playGame()
