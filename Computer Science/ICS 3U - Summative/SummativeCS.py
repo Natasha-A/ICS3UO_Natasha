@@ -35,7 +35,6 @@ def pokemonList():
 
     return pokemons
 
-
 class Player(Pokemon):
     def __init__(self, name="None", health=100, healthBars="=====", kind="None", attackOne="None", attackTwo="None",
                  attackThree="None"):
