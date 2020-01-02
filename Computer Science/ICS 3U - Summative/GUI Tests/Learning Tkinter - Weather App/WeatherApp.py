@@ -36,7 +36,7 @@ def getWeather(city):
     response = requests.get(url, params=params) #gets to url and params
     weather = response.json() #converts into python dictionary
 
-    #displays LABEL as formatted response from function 
+    #displays LABEL as formatted response from function - UPDATES
     label['text'] = formatResponse(weather)
 
 
