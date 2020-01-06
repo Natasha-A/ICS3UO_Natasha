@@ -1,8 +1,19 @@
-# CLASS OBJECTS
+'''
+Name: Natasha Ahammed
+Date: January 9 2020
+File Name: SummativeCS.py
+Description: Pokemon Game Based off of Turn-Based Battles. Player battles with Computer AI in a series of rounds \
+where a pokemon is chosen and different attacks can be chosen yielding in different amounts of damage or healing health.\
+Whoever is able to cause one the opponent's pokemon to faint first, wins the the battle.
+Test Cases: Made use of exploratory testing to examine UI display and game play loop. Played using various combinations\
+and outcomes, testing all functions individually and collectively. Use of Try and Except to handle error handling
+for user inputs, and Integration Testing to ensure that algorithms produced correct results and no logic errors.
+'''
+
 import random
 import time
 
-
+# CLASS OBJECTS
 class Pokemon():
     def __init__(self, name="None", health=100, healthBars="==========", kind="None", attackOne="None", attackTwo="None",
                  attackThree="None"):
