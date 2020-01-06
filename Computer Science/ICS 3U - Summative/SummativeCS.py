@@ -285,8 +285,8 @@ def battle(PlayerPokemon, EnemyPokemon):
 
         print("\n")
         # At the end of each of the player's and enemy's attack display total information
-        print("PLAYER:\n" + str(enemyPokemon.playerInfo()), sep="\n")
-        print("ENEMY:\n" + str(playerPokemon.playerInfo()), sep="\n")
+        print("PLAYER:\n" + str(playerTurn.playerInfo()), sep="\n")
+        print("ENEMY:\n" + str(enemyTurn.playerInfo()), sep="\n")
 
         if winner == "player":
             print("YOU HAVE WON!")
@@ -297,28 +297,29 @@ def battle(PlayerPokemon, EnemyPokemon):
         # otherwise the game continues to be played...
 
 
+#Encompasses all aspects of the game - choosing pokemons, battle rounds, wins/loses, restarting game
 def playGame():
     print("\nWelcome to Python Pokemon!\n")
     newRound = True
     continueCheckingForInput = True
 
     while newRound:
-        # GLOBAL VARIABLES
-        # need to access objects as global variables in order to be modified by other functions such as during
-        # battles and attacks
+        # ***GLOBAL VARIABLES**
+        # need to access objects as global variables in order to be modified by other functions (such as functions
+        # used during various battles and attacks)
 
-        global enemyPlayer
-        enemyPlayer = Enemy()
+        global enemyPlayer # global variable
+        enemyPlayer = Enemy() # Enemy Player Object Created
         global enemyPokemon
         enemyPokemon = Enemy.randomPokemonSelected(enemyPlayer)
         # PLAYER CHOOSES POKEMON: create instance of an enemy - takes new enemy, and prints out it's information
         global humPlayer
-        humPlayer = Player()
+        humPlayer = Player() # Human (Computer User) Object Created
         global playerPokemon
         playerPokemon = Player.selectPokemon(humPlayer)  # done in playGame()
 
         # BATTLE ROUND
-        battle(playerPokemon, enemyPokemon)  # repeats until health of a player is zero
+        battle(playerPokemon, enemyPokemon)  # repeats until health of a player is zero -- then moves onto next line
 
         while continueCheckingForInput:  # convert to yes or no buttons.
             try:
