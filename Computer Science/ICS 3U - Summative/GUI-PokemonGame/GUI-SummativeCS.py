@@ -10,6 +10,8 @@ and outcomes, testing all functions individually and collectively. Use of Try an
 for user inputs, and Integration Testing to ensure that algorithms produced correct results and no logic errors.
 '''
 
+#Add enemy pokemon seperate list, using time.sleep in order make user display easier to read. Add counts for wins and loses for rounds.
+
 import random
 import time
 
