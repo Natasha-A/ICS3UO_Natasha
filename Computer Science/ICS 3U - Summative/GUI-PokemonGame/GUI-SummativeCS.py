@@ -11,6 +11,7 @@ for user inputs, and Integration Testing to ensure that algorithms produced corr
 '''
 
 #Add enemy pokemon seperate list, using time.sleep in order make user display easier to read. Add counts for wins and loses for rounds.
+#Add comments isolating areas of kinds of functions
 
 import random
 import time
