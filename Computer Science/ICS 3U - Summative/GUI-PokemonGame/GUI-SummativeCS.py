@@ -3,11 +3,17 @@ Name: Natasha Ahammed
 Date: January 9 2020
 File Name: SummativeCS.py
 Description: Pokemon Game Based off of Turn-Based Battles. Player battles with Computer AI in a series of rounds \
-where a pokemon is chosen and different attacks can be chosen yielding in different amounts of damage or healing health.\
-Whoever is able to cause one the opponent's pokemon to faint first, wins the the battle.
-Test Cases: Made use of exploratory testing to examine UI display and game play loop. Played using various combinations\
-and outcomes, testing all functions individually and collectively. Use of Try and Except to handle error handling
-for user inputs, and Integration Testing to ensure that algorithms produced correct results and no logic errors.
+where a pokemon is chosen and different attacks can be chosen yielding in different amounts of damage or healing \
+health. Whoever is able to cause one the opponent's pokemon to faint first, wins the the battle.
+Test Cases: Made use of exploratory testing to examine UI display and game play loop. Played using various \
+combinations, testing all functions individually and collectively. Use of Try and Except to handle error handling
+for user inputs, and Integration Testing to ensure that algorithms produced correct results and no logic errors. Made
+use of PyCharm's Automated Testing in order to detect and replace unreachable code.
+
+REVEALS ASPECTS
+- First Attack: Yields in damage by 10 - 25
+- Second Attack: Yields in damage by 18 - 35
+- Third Attack: Yields in healing (to own pokemon) by 10 - 25
 '''
 
 #Add enemy pokemon seperate list, using time.sleep in order make user display easier to read. Add counts for wins and loses for rounds.
@@ -16,7 +22,7 @@ for user inputs, and Integration Testing to ensure that algorithms produced corr
 import random
 import time
 
-# CLASS OBJECTS
+# *********** CLASS OBJECTS ***********
 class Pokemon():
     def __init__(self, name="None", health=100, healthBars="==========", kind="None", attackOne="None", attackTwo="None",
                  attackThree="None"):
@@ -30,24 +36,10 @@ class Pokemon():
         self.attackThree = attackThree
 
     def playerInfo(self):
-        return '-- Player Info --\nName: {}\nHealth: {}\nHP: {}\nType: {}\nAttack 1: {}\nAttack 2: {}\nAttack 3: {}\n'.format(
+        return '-- Player Info --\nName: {}\nHealth: {}\nHP: \n'.format(
             self.name,
             self.health,
-            self.healthBars,
-            self.kind,
-            self.attackOne,
-            self.attackTwo,
-            self.attackThree)
-
-
-def pokemonList():
-    #*stores all instances of existing pokemon - can create seperate functions for enemy pokemon and player pokemon
-    charmander = Pokemon("Charmander",100, "==========", "Fire", "Flamethrower", "Fire Spin", "Cast Inferno")
-    bulbasaur = Pokemon("Bulbasaur", 100, "==========", "Grass", "Vine Whip", "Leech Seed", "Cast Razor Leaf")
-    squirtle = Pokemon("Squirtle",  100, "==========", "Water", "Rapid Spin", "Aqua Tail", "Cast Hydro Pump")
-    pokemons = [charmander, bulbasaur, squirtle]
-
-    return pokemons
+            self.healthBars)
 
 class Player(Pokemon):
     def __init__(self, name="None", health=100, healthBars="=====", kind="None", attackOne="None", attackTwo="None",
@@ -59,7 +51,7 @@ class Player(Pokemon):
     @staticmethod
     def selectPokemon(self):
         checkPokemon = True
-        pokemons = pokemonList()
+        pokemons = playerPokemonList()
 
         for pokemonIndex in range(len(pokemons)):
             print(str(pokemonIndex + 1) + ": " + pokemons[pokemonIndex].name)
@@ -88,7 +80,7 @@ class Enemy(Pokemon):
     # Enemy chooses pokemon at random
     @staticmethod
     def randomPokemonSelected(self):
-        pokemons = pokemonList()
+        pokemons = enemyPokemonList()
         pokemonChosen = random.choice(pokemons)
 
         nameOfPokemon = pokemonChosen.name
@@ -97,6 +89,25 @@ class Enemy(Pokemon):
         print("The Pokemon chosen by the Trainer is:", nameOfPokemon)
 
         return pokemonChosen
+
+# *********** INSTANCE Functions - Pokemon Lists ***********
+def playerPokemonList():
+    # *stores all instances of existing pokemon - can create seperate functions for enemy pokemon and player pokemon
+    charmander = Pokemon("Charmander", 100, "==========", "Fire", "Flamethrower", "Fire Spin", "Cast")
+    bulbasaur = Pokemon("Bulbasaur", 100, "==========", "Grass", "Vine Whip", "Leech Seed", "Cast")
+    squirtle = Pokemon("Squirtle", 100, "==========", "Water", "Rapid Spin", "Aqua Tail", "Cast")
+    pokemons = [charmander, bulbasaur, squirtle]
+
+    return pokemons
+
+def enemyPokemonList():
+    # *stores all instances of existing pokemon - can create seperate functions for enemy pokemon and player pokemon
+    pidgey = Pokemon("Pidgey", 100, "==========", "Normal", "Gust", "Whirlwind", "Cast")
+    pikachu = Pokemon("Pikachu", 100, "==========", "Electric", "Thunder Shock", "Thunderbolt", "Cast")
+    mankey = Pokemon("Mankey", 100, "==========", "Fighting", "Karate Chop", "Cross Chop", "Cast")
+    pokemons = [pidgey, pikachu, mankey]
+
+    return pokemons
 
 def barHealth(health):
     roundedHealth = health // 10  # splits health into bars
@@ -298,8 +309,18 @@ def battle(PlayerPokemon, EnemyPokemon):
 
         print("\n")
         # At the end of each of the player's and enemy's attack display total information
+        '''
+         if i == 0:
+      print(dash)
+      print('{:<10s}{:>4s}{:>12s}{:>12s}'.format(data[i][0],data[i][1],data[i][2],data[i][3]))
+      print(dash)
+        '''
+        print('{:>4s}{:>18s}'.format("PLAYER", "ENEMY"))
+
+        '''
         print("PLAYER:\n" + str(playerTurn.playerInfo()), sep="\n")
         print("ENEMY:\n" + str(enemyTurn.playerInfo()), sep="\n")
+        '''
 
         if winner == "player":
             print("YOU HAVE WON!")
