@@ -3,19 +3,33 @@ Name: Natasha Ahammed
 Date: January 9 2020
 File Name: SummativeCS.py
 Description: Pokemon Game Based off of Turn-Based Battles. Player battles with Computer AI in a series of rounds \
-where a pokemon is chosen and different attacks can be chosen yielding in different amounts of damage or healing health.\
-Whoever is able to cause one the opponent's pokemon to faint first, wins the the battle.
-Test Cases: Made use of exploratory testing to examine UI display and game play loop. Played using various combinations\
-and outcomes, testing all functions individually and collectively. Use of Try and Except to handle error handling
-for user inputs, and Integration Testing to ensure that algorithms produced correct results and no logic errors.
+where a pokemon is chosen and different attacks can be chosen yielding in different amounts of damage or healing \
+health. Whoever is able to cause one the opponent's pokemon to faint first, wins the the battle.
+Test Cases: Made use of exploratory testing to examine UI display and game play loop. Played using various \
+combinations, testing all functions individually and collectively. Use of Try and Except to handle error handling
+for user inputs, and Integration Testing to ensure that algorithms produced correct results and no logic errors. Made
+use of PyCharm's Automated Testing in order to detect and replace unreachable code.
+
+REVEALS ASPECTS
+- First Attack: Yields in damage by 10 - 25 HP
+- Second Attack: Yields in damage by 18 - 35 HP
+- Third Attack: Yields in healing (to own pokemon) by 10 - 25 HP
 '''
+
+# Add enemy pokemon seperate list, using time.sleep in order make user display easier to read. Add counts for wins and loses for rounds.
+# Add comments isolating areas of kinds of functions
 
 import random
 import time
 
-# CLASS OBJECTS
+
+# *********** CLASS OBJECTS ***********
 class Pokemon():
-    def __init__(self, name="None", health=100, healthBars="==========", kind="None", attackOne="None", attackTwo="None",
+
+    attackList = []
+
+    def __init__(self, name="None", health=100, healthBars="==========", kind="None", attackOne="None",
+                 attackTwo="None",
                  attackThree="None"):
         self.allPokemon = []
         self.name = name
@@ -26,28 +40,24 @@ class Pokemon():
         self.attackTwo = attackTwo
         self.attackThree = attackThree
 
+    # displays main stats during battle
     def playerInfo(self):
-        return '-- Player Info --\nName: {}\nHealth: {}\nHP: {}\nType: {}\nAttack 1: {}\nAttack 2: {}\nAttack 3: {}\n'.format(
+        return '-- Player Info --\nName: {}\nHealth: {}\nHP: \n'.format(
             self.name,
             self.health,
-            self.healthBars,
-            self.kind,
-            self.attackOne,
-            self.attackTwo,
-            self.attackThree)
+            self.healthBars)
 
+    # Creates list of instances of attacks used by Enemy Chosen Pokemon
+    @staticmethod
+    def attackList(self,numberChosen):
+        enemyAttackList = [self.attackOne, self.attackTwo,
+                           self.attackThree]
 
-def pokemonList():
-    #*stores all instances of existing pokemon - can create seperate functions for enemy pokemon and player pokemon
-    charmander = Pokemon("Charmander",100, "==========", "Fire", "Flamethrower", "Fire Spin", "Cast Inferno")
-    bulbasaur = Pokemon("Bulbasaur", 100, "==========", "Grass", "Vine Whip", "Leech Seed", "Cast Razor Leaf")
-    squirtle = Pokemon("Squirtle",  100, "==========", "Water", "Rapid Spin", "Aqua Tail", "Cast Hydro Pump")
-    pokemons = [charmander, bulbasaur, squirtle]
-
-    return pokemons
+        return enemyAttackList[numberChosen]
 
 class Player(Pokemon):
-    def __init__(self, name="None", health=100, healthBars="=====", kind="None", attackOne="None", attackTwo="None",
+    def __init__(self, name="None", health=100, healthBars="==========", kind="None", attackOne="None",
+                 attackTwo="None",
                  attackThree="None"):
         super().__init__(name, health, healthBars, kind, attackOne, attackTwo, attackThree)
 
@@ -56,16 +66,17 @@ class Player(Pokemon):
     @staticmethod
     def selectPokemon(self):
         checkPokemon = True
-        pokemons = pokemonList()
+        pokemons = playerPokemonList()
 
         for pokemonIndex in range(len(pokemons)):
             print(str(pokemonIndex + 1) + ": " + pokemons[pokemonIndex].name)
 
         while checkPokemon:
             try:
-                pokemonChosen = int(input("Choose a pokemon: "))
+                pokemonChosen = int(input("Choose a pokemon (#):"))
                 if pokemonChosen > 0 and pokemonChosen <= (len(pokemons)):
-                    print("You have chosen the pokemon:", pokemons[pokemonChosen - 1].name)
+                    print("\nGo!", str(pokemons[pokemonChosen - 1].name) + "!")
+                    time.sleep(0.5)
                     return pokemons[pokemonChosen - 1]  # print out pokemon at index of chosen pokemon (1,2,3)
                 else:
                     raise AssertionError
@@ -78,6 +89,7 @@ class Player(Pokemon):
 
 
 class Enemy(Pokemon):
+
     def __init__(self, name="None", health=100, healthBars="=====", kind="None", attackOne="None", attackTwo="None",
                  attackThree="None"):
         super().__init__(name, health, healthBars, kind, attackOne, attackTwo, attackThree)
@@ -85,20 +97,44 @@ class Enemy(Pokemon):
     # Enemy chooses pokemon at random
     @staticmethod
     def randomPokemonSelected(self):
-        pokemons = pokemonList()
+        pokemons = enemyPokemonList()
         pokemonChosen = random.choice(pokemons)
 
         nameOfPokemon = pokemonChosen.name
 
-        print("Enemy Trainer is choosing its pokemon...")
-        print("The Pokemon chosen by the Trainer is:", nameOfPokemon)
+        print("Pokemon Trainer RED sent out", str(nameOfPokemon) + "!\n")
+        time.sleep(0.7)
 
         return pokemonChosen
 
 
+
+# *********** INSTANCE Functions - Pokemon Lists ***********
+def playerPokemonList():
+    # *stores all instances of existing pokemon - can create seperate functions for enemy pokemon and player pokemon
+    charmander = Pokemon("CHARMANDER", 100, "==========", "FIRE", "FLAMETHROWER", "FIRE SPIN", "CAST")
+    bulbasaur = Pokemon("BULBASAUR", 100, "==========", "GRASS", "VINE WHIP", "LEECH SEED", "CAST")
+    squirtle = Pokemon("SQUIRTLE", 100, "==========", "WATER", "RAPID SPIN", "AQUA TAIL", "CAST")
+    pokemons = [charmander, bulbasaur, squirtle]
+
+    return pokemons
+
+
+def enemyPokemonList():
+    # *stores all instances of existing pokemon - can create seperate functions for enemy pokemon and player pokemon
+    pidgey = Pokemon("PIDGEY", 100, "==========", "NORMAL", "GUST", "WHIRLWIND", "CAST")
+    pikachu = Pokemon("PIKACHU", 100, "==========", "ELECTRIC", "THUNDER SHOCK", "THUNDERBOLT", "CAST")
+    mankey = Pokemon("MANKEY", 100, "==========", "FIGHTING", "KARATE CHOP", "CROSS CHOP", "CAST")
+    pokemons = [pidgey, pikachu, mankey]
+
+    return pokemons
+
+
+# *********** GAME FUNCTIONS - Behaviours and displays of Main Game and Battles ***********
+
+# visual bar display of level of health in reference to player's HP health
 def barHealth(health):
     roundedHealth = health // 10  # splits health into bars
-
     if health >= 10:
         barAmount = "=" * roundedHealth
     elif health < 10 and health > 0:
@@ -107,15 +143,18 @@ def barHealth(health):
         barAmount = ""
 
     print("HP:", barAmount)
+    time.sleep(0.7)
 
     return barAmount
 
 
-# PROCESS behind attack effect on health and damage to other pokemon
-def attackOutcome(attackChoice, pokemonSIDED, pokemonOPPOSING):  # eg when Player's Turn: pPokemon = pokemonSIDED
+# Process behind attack effect on health and damage to other pokemon (Parameter Input Depends on Turn of Player)
+def attackOutcome(attackChoice, pokemonSIDED, pokemonOPPOSING):  # eg when CPU's Turn: "enemyPokemon" = pokemonSIDED, \
+    # when User Player's Turn: "playerPokemon" = pokemonSIDED
+
     # ePokemon = pokemonOPPOSING
     attackChosen = attackChoice
-    opposingPokemon = pokemonOPPOSING  # for player - opposingPokemon = 'enemy'... for enemny - opposingPokemon = 'player'
+    opposingPokemon = pokemonOPPOSING  # for player - opposingPokemon = 'enemy'. For enemy - opposingPokemon = 'player'
     pokemonOnSide = pokemonSIDED
     newPlayerHealth = pokemonSIDED.health  # initalize health of player
     newEnemyHealth = pokemonOPPOSING.health  # initalize health of enemy
@@ -128,20 +167,21 @@ def attackOutcome(attackChoice, pokemonSIDED, pokemonOPPOSING):  # eg when Playe
         opposingPokemon.healthBars = barHealth(newEnemyHealth)
 
         if attackDamage >= 20:
-            print("The attack is very effective!")
+            print("The attack is very effective!\n")
         # attack is 19 or below
         else:
-            print("The attack is not very effective...")
+            print("The attack is not very effective...\n")
+            time.sleep(1)
 
         if newEnemyHealth > 100:
             opposingPokemon.health = 100  # reduce to capped health if outcome is greater
 
         if opposingPokemon.health < 0:  # if health has been reduced negative, it will be capped to value of 0
             opposingPokemon.health = 0
-            print(opposingPokemon.name, "has fainted!")
+            print(opposingPokemon.name, "has fainted!\n") # HP has reached 0
 
-        print("Health has been decreased by:", attackDamage, "to:", opposingPokemon.health)
-
+        print(opposingPokemon.name, "health has been decreased by:", attackDamage, "HP to:", opposingPokemon.health, "HP.")
+        time.sleep(1)
 
     # High Range Damage:
     elif attackChosen == 2:
@@ -151,25 +191,28 @@ def attackOutcome(attackChoice, pokemonSIDED, pokemonOPPOSING):  # eg when Playe
         opposingPokemon.healthBars = barHealth(newEnemyHealth)
 
         if attackDamage >= 30:
-            print("The attack is extremely effective!")
+            print("The attack is extremely effective!\n")
         elif attackDamage >= 20:
-            print("The attack is very effective!")
+            print("The attack is super effective!\n")
         else:
-            print("The attack is not very effective...")
+            print("The attack is not very effective...\n")
+        time.sleep(1)
 
         if opposingPokemon.health > 100:
             opposingPokemon.health = 100  # reduce to capped health
 
         if opposingPokemon.health < 0:  # if health has been reduced negative, it will be capped to value of 0
             opposingPokemon.health = 0
-            print(opposingPokemon.name, "has fainted!")
+            print(opposingPokemon.name, "has fainted!\n")
 
-        print("Health has been decreased by:", attackDamage, "to:", opposingPokemon.health)
+        print(opposingPokemon.name, "health has been decreased by:", attackDamage, "HP to:", opposingPokemon.health, "HP.")
+        time.sleep(1)
 
-    # CAST - increase player's hp by moderate amount
+
+    # CAST - increase own player's HP by moderate amount:
     elif attackChosen == 3:
         if pokemonOnSide.health >= 100:
-            print("Cast is not effective. You are already at the max health.")
+            print("Cast is not effective. Pokemon is already at the max health.\n")
         else:
             cast = random.randint(18, 25)
             newPlayerHealth = pokemonOnSide.health + cast
@@ -177,23 +220,26 @@ def attackOutcome(attackChoice, pokemonSIDED, pokemonOPPOSING):  # eg when Playe
             pokemonOnSide.healthBars = barHealth(newEnemyHealth)
 
             if cast >= 20:
-                print("The cast was very effective!")
+                print("The cast was very effective!\n")
             else:
-                print("The cast was not very effective...")
+                print("The cast was not very effective...\n")
+            time.sleep(1)
+
 
             if newPlayerHealth > 100:
                 pokemonOnSide.health = 100  # Capped health of 100, doesn't go beyond
 
             if newPlayerHealth < 0:  # if health has been reduced negative, it will be capped to value of 0
                 pokemonOnSide.health = 0
-                print(opposingPokemon.name, "has fainted!")
+                print(opposingPokemon.name, "has fainted!\n")
 
-            print("The cast has healed the health by:", cast, "to:", pokemonOnSide.health)
+            print(pokemonOnSide.name, "has been healed by:", cast, "HP to:", pokemonOnSide.health, "HP.\n")
+            time.sleep(1)
 
     return newPlayerHealth, newEnemyHealth
-    # if either health has reached zero yet in order to choose winner
 
 
+# User Player's Turn in Battle Round
 def playerAttack(pChosenPokemon):
     checkAttack = True
     # playerPokemon - assigns parameter as chosen pokemon object
@@ -201,18 +247,26 @@ def playerAttack(pChosenPokemon):
     attack1 = pChosenPokemon.attackOne
     attack2 = pChosenPokemon.attackTwo
     attack3 = pChosenPokemon.attackThree
-    attackList = [attack1, attack2, attack3]
+    attackList = [attack1, attack2, attack3]  # list of attacks corresponding to chosen pokemon
 
     # Display attacks for chosen Pokemon for current battle
+    time.sleep(0.6)
+    print("\n")
     for attackIndex in range(len(attackList)):
         print(str(attackIndex + 1) + ":", attackList[attackIndex])
+    print("\n")
+    time.sleep(0.6)
 
     # check for correct INPUT for attack:
     while checkAttack:
         try:
-            attackChosen = int(input("Choose an attack!\n"))
+            attackChosen = int(input("Choose an attack (#): "))
+            print("\n")
+            time.sleep(0.6)
+
             if attackChosen > 0 and attackChosen <= (len(attackList)):
-                print("Attack chosen:", attackList[attackChosen - 1])
+                print(pChosenPokemon.name, "used", str(attackList[attackChosen - 1]) + "!")
+                time.sleep(0.6)
                 checkAttack = False
             else:
                 raise AssertionError
@@ -228,33 +282,37 @@ def playerAttack(pChosenPokemon):
     attackOutcome(attackChosen, playerPokemon, enemyPokemon)
 
 
+# CPU Player's Turn in Battle Round
 def enemyAttack(eChosenPokemon):
     # only need to index attacks in order to choose option
 
     if eChosenPokemon.health <= 30:
         enemyAttackList = [1, 2, 3, 3, 3]  # Increase chances of enemy choosing cast when HP is at a low level:
-
     else:
         enemyAttackList = [1, 2, 3]
 
     enemyAttackChosen = random.choice(enemyAttackList)
-    print("Attack chosen:", enemyAttackChosen)
+
+    # Address change in turn in battle, index attack randomly selected
+    print("\nEnemy", enemyPokemon.name, "used", str(enemyPokemon.attackList(enemyPokemon, (enemyAttackChosen-1))) + "!")
 
     attackOutcome(enemyAttackChosen, enemyPokemon, playerPokemon)
 
 
+# Throughout battle, check healths of both players. Once of the player's health reaches zero, assert the winner of the\
+# round
 def checkHealth(playerHealth, enemyHealth):
-    # one of the players have reached a health of 0 ...
-    while True:  # not needed? always breaking***
-        if playerHealth <= 0 or enemyHealth <= 0:
-            if playerHealth > enemyHealth:  # player has won
-                winner = "player"  # turn into enums?*****
+    while True:
+        if playerHealth <= 0 or enemyHealth <= 0:  # one of the players have reached a health of 0 ...
+
+            if playerHealth > enemyHealth:  # User Player has won
+                winner = "player"
                 enemyPlayer.health = 0
                 break
                 # multiple situations where breaking out of the while loop in necessary. Thus in order to avoid
                 # overwriting the boolean state further in function, break used to dismiss loop on command.
 
-            else:  # enemy has won
+            else:  # Enemy CPU has won
                 winner = "enemy"
                 humPlayer.health = 0
                 break
@@ -265,83 +323,83 @@ def checkHealth(playerHealth, enemyHealth):
     return winner
 
 
+# Individual Complete Battle Round
 def battle(PlayerPokemon, EnemyPokemon):
     runBattle = True
-    playerTurn = PlayerPokemon
+    playerTurn = PlayerPokemon  # Assign objects as instances
     enemyTurn = EnemyPokemon
-    # continueBattle = True
-    # create new instance of playerTurn and EnemyTurn for each round
-    # round 1 - player goes first
-
-    print("\nPython Pokemon Battle Begins!\n")
 
     while runBattle:
-        print("PLAYER'S TURN \n")
         playerAttack(playerTurn)
-        winner = checkHealth(playerTurn.health, enemyTurn.health)
+        winner = checkHealth(playerTurn.health, enemyTurn.health)  # check for state of health
 
-        if winner == "player":
-            print("YOU HAVE WON!")
+        if winner == "player":  # fake 'enum' type usage in order assert winner of round
+            print("\nYou have won the battle!\n")
             break
         elif winner == "enemy":
-            print("THE COMPUTER HAS WON!")
+            print("\nPokemon Trainer RED won the battle!\n")
             break
 
         time.sleep(2)  # delay for user to view results
 
-        print("\nENEMY'S TURN")
         # round 1 - enemy goes second
         enemyAttack(enemyTurn)
         winner = checkHealth(playerTurn.health, enemyTurn.health)
 
         print("\n")
-        # At the end of each of the player's and enemy's attack display total information
-        print("PLAYER:\n" + str(playerTurn.playerInfo()), sep="\n")
-        print("ENEMY:\n" + str(enemyTurn.playerInfo()), sep="\n")
 
-        if winner == "player":
-            print("YOU HAVE WON!")
-            break
-        elif winner == "enemy":
-            print("THE COMPUTER HAS WON!")
-            break
-        # otherwise the game continues to be played...
+        # ATTACK ROUND STATS - At the end of each of the player's and enemy's attack display total information
+        dash = '-' * 30
+        print(dash)
+        print('{:>4s}{:>18}'.format("PLAYER", "ENEMY"))
+        print(dash)
+        print('{:>2s}{:>12s}'.format(PlayerPokemon.name, EnemyPokemon.name))
+        print('{:>2s}{:>16s}'.format(str(PlayerPokemon.health), str(EnemyPokemon.health)))
+        print('HP: {:>2s}    HP: {:>4s}'.format(str(PlayerPokemon.healthBars), str(EnemyPokemon.healthBars)))
 
 
-#Encompasses all aspects of the game - choosing pokemons, battle rounds, wins/loses, restarting game
+
+
+# Encompasses all aspects of the game - choosing pokemons, battle rounds, wins/loses, restarting game
 def playGame():
-    print("\nWelcome to Python Pokemon!\n")
     newRound = True
     continueCheckingForInput = True
+
+    # INITIAL TITLE
+    print("\nWelcome to Python Pokemon!\n")
+    time.sleep(1.5)
+    print("Pokemon Trainer RED wants to battle!\n")
+    time.sleep(1)
 
     while newRound:
         # ***GLOBAL VARIABLES**
         # need to access objects as global variables in order to be modified by other functions (such as functions
         # used during various battles and attacks)
-
-        global enemyPlayer # global variable
-        enemyPlayer = Enemy() # Enemy Player Object Created
-        global enemyPokemon
+        # CREATE PLAYER OBJECTS - USER and CPU
+        # global enemyPlayer  # global variable
+        enemyPlayer = Enemy()  # Enemy Player Object Created
+        # global enemyPokemon
         enemyPokemon = Enemy.randomPokemonSelected(enemyPlayer)
         # PLAYER CHOOSES POKEMON: create instance of an enemy - takes new enemy, and prints out it's information
-        global humPlayer
-        humPlayer = Player() # Human (Computer User) Object Created
-        global playerPokemon
+        # global humPlayer
+        humPlayer = Player()  # Human (Computer User) Object Created
+        # global playerPokemon
         playerPokemon = Player.selectPokemon(humPlayer)  # done in playGame()
 
-        # BATTLE ROUND
-        battle(playerPokemon, enemyPokemon)  # repeats until health of a player is zero -- then moves onto next line
+        # BATTLE ROUND PLAYED
+        battle(playerPokemon, enemyPokemon)  # repeats until health of a player is zero -- then moves onto next line:
 
-        while continueCheckingForInput:  # convert to yes or no buttons.
+        while continueCheckingForInput:
             try:
-                runProgram = input("Would you like to run the program again? ").lower()
+                runProgram = input("Battle again? ").lower()
+                print("\n")
 
                 if runProgram == "yes":
                     newRound = True
                     continueCheckingForInput = False
 
                 elif runProgram == "no":
-                    print("Python Pokemon Battle Has Ended!")
+                    print("Python Pokemon battle ended!")
                     newRound = False  # BREAKS FROM LOOP
                     continueCheckingForInput = False
 
@@ -354,4 +412,4 @@ def playGame():
 
 
 # MAIN PROGRAM
-playGame()
+playGame(Player(), Enemy())
