@@ -1,7 +1,7 @@
 '''
 Name: Natasha Ahammed
 Date: January 9 2020
-File Name: SummativeCS.py
+File Name: Natasha_Ahammed_SummativeCS.py
 Description: Pokemon Game Based off of Turn-Based Battles. Player battles with Computer AI in a series of rounds \
 where a pokemon is chosen and different attacks can be chosen yielding in different amounts of damage or healing \
 health. Whoever is able to cause one the opponent's pokemon to faint first, wins the the battle.
@@ -21,6 +21,23 @@ REVEALS ASPECTS
 
 import random
 import time
+import tkinter as tk
+from tkinter import font
+
+#Creating GUI
+HEIGHT = 700
+WIDTH = 800
+#root window
+root = tk.Tk()
+
+# widgets - display canvas and frame sizing
+canvas = tk.Canvas(root, height=HEIGHT, width=WIDTH)
+canvas.pack()
+
+#CREATING BACKGROUND IMAGE
+backgroundImage = tk.PhotoImage(file="battleGround.png")
+backgroundLabel = tk.Label(root, image=backgroundImage)
+backgroundLabel.place(relwidth=1, relheight=1)
 
 
 # *********** CLASS OBJECTS ***********
@@ -373,6 +390,8 @@ def battle(playerObject, enemyObject):
 
 # Encompasses all aspects of the game - choosing pokemons, battle rounds, wins/loses, restarting game
 def playGame(playerObject, enemyObject):
+    root.mainloop()
+
     newRound = True
     continueCheckingForInput = True
 
@@ -389,10 +408,8 @@ def playGame(playerObject, enemyObject):
 
         enemyPlayer = enemyObject  # Enemy Player Object Created
         enemyPokemon = Enemy.randomPokemonSelected(enemyPlayer) # Enemy randomly chooses pokemon
-
         # BATTLE ROUND PLAYED
         battle(playerPokemon, enemyPokemon)  # repeats until health of a player is zero -- then moves onto next line:
-
         while continueCheckingForInput:
             try:
                 runProgram = input("Battle again? ").lower()
