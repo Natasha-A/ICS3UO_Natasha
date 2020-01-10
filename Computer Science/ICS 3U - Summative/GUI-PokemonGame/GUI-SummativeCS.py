@@ -19,6 +19,24 @@ REVEALS ASPECTS
 # Add enemy pokemon seperate list, using time.sleep in order make user display easier to read. Add counts for wins and loses for rounds.
 # Add comments isolating areas of kinds of functions
 
+'''
+Class Example 
+# Use Tkinter for python 2, tkinter for python 3
+import tkinter as tk
+
+class MainApplication(tk.Frame):
+    def __init__(self, parent, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
+        self.parent = parent
+
+        <create the rest of your GUI here>
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    MainApplication(root).pack(side="top", fill="both", expand=True)
+    root.mainloop()
+
+'''
 import random
 import time
 import tkinter as tk
@@ -34,10 +52,19 @@ root = tk.Tk()
 canvas = tk.Canvas(root, height=HEIGHT, width=WIDTH)
 canvas.pack()
 
-#CREATING BACKGROUND IMAGE
+# CREATING BACKGROUND IMAGE
 backgroundImage = tk.PhotoImage(file="battleGround.png")
 backgroundLabel = tk.Label(root, image=backgroundImage)
 backgroundLabel.place(relwidth=1, relheight=1)
+
+# Using PLACE - Placd objects in exact position
+
+frame = tk.Frame(root) # no background added
+frame.place(relx=0.1, rely=0.8, relwidth=0.8, relheight=0.8)
+
+# label widget
+label = tk.Label(frame,font=("Courier", 17), text="Welcome to Python Pokemon!") # no background added
+label.place(relx=0.3, rely=0, relwidth=0.45, relheight=0.25)
 
 
 # *********** CLASS OBJECTS ***********
@@ -45,7 +72,7 @@ class Pokemon():
 
     attackList = []
 
-    def __init__(self, name="None1", health=100, healthBars="==========", kind="None", attackOne="None",
+    def __init__(self, name="None", health=100, healthBars="==========", kind="None", attackOne="None",
                  attackTwo="None",
                  attackThree="None"):
         self.allPokemon = []
@@ -73,7 +100,7 @@ class Pokemon():
         return enemyAttackList[numberChosen]
 
 class Player(Pokemon):
-    def __init__(self, name="None2", health=100, healthBars="==========", kind="None", attackOne="None",
+    def __init__(self, name="None", health=100, healthBars="==========", kind="None", attackOne="None",
                  attackTwo="None",
                  attackThree="None"):
         super().__init__(name, health, healthBars, kind, attackOne, attackTwo, attackThree)
@@ -107,7 +134,7 @@ class Player(Pokemon):
 
 class Enemy(Pokemon):
 
-    def __init__(self, name="None3", health=100, healthBars="=====", kind="None", attackOne="None", attackTwo="None",
+    def __init__(self, name="None", health=100, healthBars="=====", kind="None", attackOne="None", attackTwo="None",
                  attackThree="None"):
         super().__init__(name, health, healthBars, kind, attackOne, attackTwo, attackThree)
 
@@ -197,7 +224,6 @@ def attackOutcome(attackChoice, pokemonSidedObject, pokemonOpposedObject):  # eg
             opposingPokemon.health = 0
             print(opposingPokemon.name, "has fainted!\n") # HP has reached 0
 
-        # $$$$$$$$$
         print(opposingPokemon.name, "health has been decreased by:", attackDamage, "HP to:", opposingPokemon.health, "HP.")
         time.sleep(1)
 
