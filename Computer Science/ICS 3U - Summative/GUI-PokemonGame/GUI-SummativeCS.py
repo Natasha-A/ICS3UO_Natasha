@@ -11,11 +11,21 @@ for user inputs, and Integration Testing to ensure that algorithms produced corr
 use of PyCharm's Automated Testing in order to detect and replace unreachable code.
 
 REVEALS ASPECTS
+
+Attack Damage Outcomes
 - First Attack: Yields in damage by 10 - 25 HP
 - Second Attack: Yields in damage by 18 - 35 HP
 - Third Attack: Yields in healing (to own pokemon) by 10 - 25 HP
 
--
+Type Advantages - Stronger Pokemon - increase attack damage by half. Weaker Pokemon - decreases attack by half
+- FIRE pokemon is STRONGER against GRASS pokemon
+- FIRE pokemon is WEAKER against WATER pokemon
+
+- WATER pokemon is STRONGER against FIRE pokemon
+- WATER pokemon is WEAKER against GRASS pokemon
+
+- GRASS pokemon is STRONGER against WATER pokemon
+- GRASS pokemon is WEAKER against FIRE pokemon
 '''
 
 # Add enemy pokemon seperate list, using time.sleep in order make user display easier to read. Add counts for wins and loses for rounds.
@@ -128,7 +138,7 @@ class Player(Pokemon):
         print(dash)
 
         for pokemonIndex in range(len(pokemons)):
-            print(str(pokemonIndex + 1) + ": " + pokemons[pokemonIndex].name)
+            print(str(pokemonIndex + 1) + ": " + pokemons[pokemonIndex].name, "- TYPE:", pokemons[pokemonIndex].kind)
 
         while checkPokemon:
             try:
@@ -497,17 +507,18 @@ def playGame(playerObject, enemyObject):
 
     while newRound:
         continueCheckingForInput = True
+
         # INITIAL TITLE
         print("\nWelcome to Python Pokemon!\n")
         time.sleep(1.5)
         print("Pokemon Trainer RED wants to battle!\n")
         time.sleep(1)
         # CREATE PLAYER OBJECTS - USER and CPU
-        humPlayer = playerObject  # Human (User) Object Created
-        playerPokemon = Player.selectPokemon(humPlayer) # User chooses pokemon
-
         enemyPlayer = enemyObject  # Enemy Player Object Created
         enemyPokemon = Enemy.randomPokemonSelected(enemyPlayer) # Enemy randomly chooses pokemon
+
+        humPlayer = playerObject  # Human (User) Object Created
+        playerPokemon = Player.selectPokemon(humPlayer)  # User chooses pokemon
 
         battle(playerPokemon,
                enemyPokemon)  # repeats until health of a player is zero -- then moves onto next line:
