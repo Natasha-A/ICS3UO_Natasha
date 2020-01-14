@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk # 'CSS' for tkinter 
 
 LARGE_FONT= ("Verdana", 12)
 
@@ -7,6 +8,11 @@ class SeaofBTCapp(tk.Tk):
     def __init__(self, *args, **kwargs):
         # CONFIG PROPERTIES
         tk.Tk.__init__(self, *args, **kwargs)
+
+        # title and icon display
+        #tk.Tk.iconbitmap(self, default="pokeball.bmp")
+        tk.Tk.wm_title(self, "Python Pokemon")
+                                             
         container = tk.Frame(self)
 
         container.pack(side="top", fill="both", expand = True)
@@ -43,11 +49,11 @@ class StartPage(tk.Frame):
 
         #creating a button - calls qf when pressed -- can use to proceed with game?
         # lamba doesn't run immediately - creates in moment
-        button = tk.Button(self, text="Visit Page 1",
+        button = ttk.Button(self, text="Visit Page 1",
                             command=lambda: controller.show_frame(PageOne)) # goes to page one
         button.pack()
 
-        button = tk.Button(self, text="Visit Page 2",
+        button = ttk.Button(self, text="Visit Page 2",
                            command=lambda: controller.show_frame(PageTwo))  # goes to page one
         button.pack()
 
@@ -60,11 +66,11 @@ class PageOne(tk.Frame):
         label = tk.Label(self, text="Page One!", font=LARGE_FONT)
         label.pack(pady=10, padx=10)
 
-        button1 = tk.Button(self, text="Back to Home",
+        button1 = ttk.Button(self, text="Back to Home",
                             command=lambda: controller.show_frame(StartPage)) # goes back to start page
         button1.pack()
 
-        button2 = tk.Button(self, text="Page Two",
+        button2 = ttk.Button(self, text="Page Two",
                             command=lambda: controller.show_frame(PageTwo))  # goes back to start page
         button2.pack()
 
@@ -77,11 +83,11 @@ class PageTwo(tk.Frame):
         label = tk.Label(self, text="Page Two!", font=LARGE_FONT)
         label.pack(pady=10, padx=10)
 
-        button1 = tk.Button(self, text="Back to Home",
+        button1 = ttk.Button(self, text="Back to Home",
                             command=lambda: controller.show_frame(StartPage)) # goes back to start page
         button1.pack()
 
-        button2 = tk.Button(self, text="Page One",
+        button2 = ttk.Button(self, text="Page One",
                             command=lambda: controller.show_frame(PageOne))  # goes back to start page
         button2.pack()
 

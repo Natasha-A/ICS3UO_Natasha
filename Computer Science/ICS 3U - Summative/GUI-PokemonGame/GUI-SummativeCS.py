@@ -10,7 +10,7 @@ combinations, testing all functions individually and collectively. Use of Try an
 for user inputs, and Integration Testing to ensure that algorithms produced correct results and no logic errors. Made
 use of PyCharm's Automated Testing in order to detect and replace unreachable code.
 
-REVEALS ASPECTS
+REVEALED ASPECTS
 
 Attack Damage Outcomes
 - First Attack: Yields in damage by 10 - 25 HP
@@ -27,33 +27,74 @@ Type Advantages - Stronger Pokemon - increase attack damage by half. Weaker Poke
 - GRASS pokemon is STRONGER against WATER pokemon
 - GRASS pokemon is WEAKER against FIRE pokemon
 '''
-
-# Add enemy pokemon seperate list, using time.sleep in order make user display easier to read. Add counts for wins and loses for rounds.
-# Add comments isolating areas of kinds of functions
-
-'''
-Class Example 
-# Use Tkinter for python 2, tkinter for python 3
-import tkinter as tk
-
-class MainApplication(tk.Frame):
-    def __init__(self, parent, *args, **kwargs):
-        tk.Frame.__init__(self, parent, *args, **kwargs)
-        self.parent = parent
-
-        <create the rest of your GUI here>
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    MainApplication(root).pack(side="top", fill="both", expand=True)
-    root.mainloop()
-
-'''
 import random
 import time
 import tkinter as tk
 from tkinter import font
+from tkinter import ttk
 
+# GUI CLASS
+
+LARGE_FONT = ("Verdana", 12)
+HEIGHT = 700
+WIDTH = 800
+
+class SeaofBTCapp(tk.Tk):
+
+    def __init__(self, *args, **kwargs):
+        # CONFIG PROPERTIES
+        tk.Tk.__init__(self, *args, **kwargs)
+
+        # title and icon display
+        tk.Tk.iconbitmap(self, default="pokeball.bmp")
+        tk.Tk.wm_title(self, "Python Pokemon")
+                                             
+        container = tk.Frame(self)
+
+        container.pack(side="top", fill="both", expand = True)
+
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+
+        self.frames = {}
+
+        frame = StartPage(container, self)
+
+        self.frames[StartPage] = frame    
+
+        frame.grid(row=0, column=0, sticky="nsew")
+
+        self.show_frame(StartPage)
+
+    def show_frame(self, cont):
+        frame = self.frames[cont] # key value
+        frame.tkraise()
+        
+
+class StartPage(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self,parent)
+        label = tk.Label(self, text="Start Page", font=LARGE_FONT)
+        label.pack(pady=10,padx=10)
+
+        root = tk.Tk()
+
+        canvas = tk.Canvas(root, height=HEIGHT, width=WIDTH)
+        canvas.pack()
+
+        backgroundImage = tk.PhotoImage(file="battleGround.png")
+        backgroundLabel = tk.Label(root, image=backgroundImage)
+        backgroundLabel.place(relwidth=1, relheight=1)
+
+        frame = tk.Frame(root) # no background added
+        frame.place(relx=0.1, rely=0.8, relwidth=0.8, relheight=0.8)
+
+        
+
+
+
+'''
 #Creating GUI
 HEIGHT = 700
 WIDTH = 800
@@ -77,10 +118,10 @@ frame.place(relx=0.1, rely=0.8, relwidth=0.8, relheight=0.8)
 # label widget
 label = tk.Label(frame,font=("Courier", 17), text="Welcome to Python Pokemon!") # no background added
 label.place(relx=0.3, rely=0, relwidth=0.45, relheight=0.25)
-
+'''
 '''
 def delay_print(s):
-    1.24 - allows to print characters one by one, in order to emulate fashion in game!
+    1.24 - allows to print characters one by one, in order to emulate fashion in game
     for c in s:
         sys.stdout.write(c)
         sys.stdout.flush()
@@ -502,7 +543,9 @@ def battle(playerObject, enemyObject):
 
 # Encompasses all aspects of the game - choosing pokemons, battle rounds, wins/loses, restarting game
 def playGame(playerObject, enemyObject):
-    root.mainloop()
+    app = SeaofBTCapp()
+    app.mainloop()
+    
     newRound = True
 
     while newRound:
