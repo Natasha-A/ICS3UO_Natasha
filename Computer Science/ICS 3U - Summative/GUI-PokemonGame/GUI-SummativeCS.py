@@ -101,7 +101,7 @@ backgroundLabel.place(relwidth=1, relheight=1)
 # Using PLACE - Place objects in exact position
 
 frame = tk.Frame(root) # no background added
-frame.place(relx=0.1, rely=0.8, relwidth=0.8, relheight=0.8)
+frame.place(r≈)
 
 # label widget
 welcomeLabel = tk.Label(frame,font=("Courier", 17), text="Welcome to Python Pokemon!") # no background added

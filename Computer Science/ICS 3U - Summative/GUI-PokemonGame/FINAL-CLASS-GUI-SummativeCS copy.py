@@ -32,14 +32,14 @@ import tkinter as tk
 from tkinter import font, ttk
 
 # CONSTANTS (HENCE ALL CAPS)
-LARGE_FONT = ("Verdana", 12)
+LARGE_FONT = ("Verdana", 30)
 
 
 # *********** GUI CLASS OBJECTS ***********
 class PokemonGUIApp(tk.Tk):
 
     def __init__(self, *args, **kwargs):
-        # CONFIG PROPERTIES
+        # CONFIG PROPERTIES - for container
         tk.Tk.__init__(self, *args, **kwargs)
         container = tk.Frame(self)
 
@@ -56,6 +56,7 @@ class PokemonGUIApp(tk.Tk):
 
             self.frames[F] = frame
 
+            #allows to remove add as go along
             frame.grid(row=0, column=0, sticky="nsew")
 
         self.show_frame(StartPage)
@@ -71,34 +72,24 @@ class StartPage(tk.Frame):
         tk.Frame.__init__(self, parent)  # takes frame from parent
         self.parent = parent
 
-        # *** initialize the screen UI ***
-        # create a background image
-
-        #backgroundImage = tk.PhotoImage(file="battleGround.png")  # update values
-        #backgroundLabel = tk.Label(self, image=backgroundImage)
-        #backgroundLabel.pack()
-
         backgroundImage = tk.PhotoImage(file="battleGround.png")  # update values
-        panel = tk.Label(self, image=backgroundImage)
-        panel.photo = backgroundImage
-        panel.pack(padx=1, pady=1, expand=True)
+        backgroundLabel = tk.Label(self, image=backgroundImage)
+        backgroundLabel.photo = backgroundImage
+        backgroundLabel.place(relwidth=1, relheight=1)
 
 
+        label = tk.Label(self, text="Welcome to Python Pokemon!", font=LARGE_FONT)
 
+        # Potential UI configs
+        #label.place(relx=0.3, rely=0, relwidth=0.45, relheight=0.25)
+        #label.pack(side="bottom", fill="x")
+        #label.place(relx=0.3, rely=0.4, relwidth=0.45, relheight=0.25)
+        label.pack(side="bottom", fill="x")
 
-        #label = tk.Label(self, text="Start Page", font=LARGE_FONT)
-
-        #label.pack(pady=10,padx=10)
-
-        # creating a button - calls qf when pressed -- can use to proceed with game?
-        # lamba doesn't run immediately - creates in moment
-        #button = tk.Button(self, text="Visit Page 1",
-                           #command=lambda: controller.show_frame(PageOne))  # goes to page one
-        #button.pack()
-
-        #button = tk.Button(self, text="Visit Page 2",
-                           #command=lambda: controller.show_frame(PageTwo))  # goes to page one
-        #button.pack()
+        # goes to page one
+        button = tk.Button(self, text="Next",
+                           command=lambda: controller.show_frame(PageOne))  # goes to page one
+        button.pack(side="right")
 
 
 # Page One
@@ -107,34 +98,76 @@ class PageOne(tk.Frame):
     # always creating under init, since always working into each 'sel' call of object
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Page One!", font=LARGE_FONT)
+        label = tk.Label(self, text="Pokemon Trainer RED wants to battle!", font=LARGE_FONT)
         label.pack(pady=10, padx=10)
 
-        button1 = tk.Button(self, text="Back to Home",
-                            command=lambda: controller.show_frame(StartPage))  # goes back to start page
-        button1.pack()
+        # CREATE PLAYER OBJECTS - USER and CPU
+        enemyPlayer = Enemy()  # Enemy Player Object Created
+        enemyPokemon = Enemy.randomPokemonSelected(enemyPlayer)  # Enemy randomly chooses pokemon
 
-        button2 = tk.Button(self, text="Page Two",
+        textEnemy = "Sent out:" + str(enemyPokemon.name)
+
+        label2 = tk.Label(self, text=textEnemy, font=LARGE_FONT)
+        label2.pack()
+
+
+        # goes to page two
+        button2 = tk.Button(self, text="Next",
                             command=lambda: controller.show_frame(PageTwo))  # goes back to start page
         button2.pack()
 
 
-# Page One
+# Page Two
 class PageTwo(tk.Frame):
-
     # always creating under init, since always working into each 'sel' call of object
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Page Two!", font=LARGE_FONT)
+        def getChosenPokemon(entry):
+            humPlayer = Player()  # Human (User) Object Created
+            playerPokemon = Player.selectPokemon(entry)  # Enemy randomly chooses pokemon
+
+            chosenPk = "You chose:" + str(playerPokemon)
+
+            chosenPokemon = tk.Label(self, text=chosenPk, font=LARGE_FONT)
+            chosenPokemon.pack()
+
+        label = tk.Label(self, text="Which Pokemon will you choose?", font=LARGE_FONT)
         label.pack(pady=10, padx=10)
 
-        button1 = tk.Button(self, text="Back to Home",
-                            command=lambda: controller.show_frame(StartPage))  # goes back to start page
-        button1.pack()
-
-        button2 = tk.Button(self, text="Page One",
+        button2 = tk.Button(self, text="Next",
                             command=lambda: controller.show_frame(PageOne))  # goes back to start page
         button2.pack()
+
+
+        pokemon1 = tk.Label(self, text="Charmander", font=LARGE_FONT)
+        pokemon2 = tk.Label(self, text="Bulbasaur", font=LARGE_FONT)
+        pokemon3 = tk.Label(self, text="Squirtle", font=LARGE_FONT)
+
+        entry = tk.Entry(self, font=("Courier", 18), bg="green")
+        entry.pack()
+        entryButton = tk.Button(self, text="Get Chosen Pokemon", font=("Courier", 16),bg="green",
+                           command=lambda: getChosenPokemon(entry.get()))  # DISPLAYS ENTRY text
+
+        entryButton.pack(pady=10, padx=10)
+
+        pokemon1.pack(pady=10, padx=10)
+        pokemon2.pack(pady=10, padx=10)
+        pokemon3.pack(pady=10, padx=10)
+
+
+
+
+
+
+        #entryPlayer = "You have chosen!" + str(playerPokemon.name)
+
+        #label2 = tk.Label(self, text=entryPlayer, font=LARGE_FONT)
+        #label2.pack()
+
+
+
+
+
 
 
 # when adding new information - create lamda functions which will call game functions in order to run forward
@@ -181,7 +214,7 @@ class Player(Pokemon):
     # create property for number of wins?
 
     @staticmethod
-    def selectPokemon(self):
+    def selectPokemon(pokemonSelected):
         checkPokemon = True
         pokemons = playerPokemonList()
         dash = "-" * 30
@@ -194,11 +227,8 @@ class Player(Pokemon):
 
         while checkPokemon:
             try:
-                pokemonChosen = int(input("\nWhich pokemon will you choose? (#):"))
-                if pokemonChosen > 0 and pokemonChosen <= (len(pokemons)):
-                    print("\nGo!", str(pokemons[pokemonChosen - 1].name) + "!")
-                    time.sleep(0.5)
-                    return pokemons[pokemonChosen - 1]  # print out pokemon at index of chosen pokemon (1,2,3)
+                if int(pokemonSelected) > 0 and int(pokemonSelected) <= (len(pokemons)):
+                    return pokemons[int(pokemonSelected)].name  # print out pokemon at index of chosen pokemon (1,2,3)
                 else:
                     raise AssertionError
 
