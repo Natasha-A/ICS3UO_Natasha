@@ -31,6 +31,115 @@ import random, time
 import tkinter as tk
 from tkinter import font, ttk
 
+# CONSTANTS (HENCE ALL CAPS)
+LARGE_FONT = ("Verdana", 12)
+
+
+# *********** GUI CLASS OBJECTS ***********
+class PokemonGUIApp(tk.Tk):
+
+    def __init__(self, *args, **kwargs):
+        # CONFIG PROPERTIES
+        tk.Tk.__init__(self, *args, **kwargs)
+        container = tk.Frame(self)
+
+        container.pack(side="top", fill="both", expand=True)
+
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+
+        self.frames = {}
+
+        # runs through pages - saving the frames added, and bringing to the front
+        for F in (StartPage, PageOne, PageTwo):
+            frame = F(container, self)
+
+            self.frames[F] = frame
+
+            frame.grid(row=0, column=0, sticky="nsew")
+
+        self.show_frame(StartPage)
+
+    def show_frame(self, cont):
+        frame = self.frames[cont]
+        frame.tkraise()
+
+
+class StartPage(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)  # takes frame from parent
+        self.parent = parent
+
+        # *** initialize the screen UI ***
+        # create a background image
+
+        #backgroundImage = tk.PhotoImage(file="battleGround.png")  # update values
+        #backgroundLabel = tk.Label(self, image=backgroundImage)
+        #backgroundLabel.pack()
+
+        backgroundImage = tk.PhotoImage(file="battleGround.png")  # update values
+        panel = tk.Label(self, image=backgroundImage)
+        panel.photo = backgroundImage
+        panel.pack(padx=1, pady=1, expand=True)
+
+
+
+
+        #label = tk.Label(self, text="Start Page", font=LARGE_FONT)
+
+        #label.pack(pady=10,padx=10)
+
+        # creating a button - calls qf when pressed -- can use to proceed with game?
+        # lamba doesn't run immediately - creates in moment
+        #button = tk.Button(self, text="Visit Page 1",
+                           #command=lambda: controller.show_frame(PageOne))  # goes to page one
+        #button.pack()
+
+        #button = tk.Button(self, text="Visit Page 2",
+                           #command=lambda: controller.show_frame(PageTwo))  # goes to page one
+        #button.pack()
+
+
+# Page One
+class PageOne(tk.Frame):
+
+    # always creating under init, since always working into each 'sel' call of object
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Page One!", font=LARGE_FONT)
+        label.pack(pady=10, padx=10)
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(StartPage))  # goes back to start page
+        button1.pack()
+
+        button2 = tk.Button(self, text="Page Two",
+                            command=lambda: controller.show_frame(PageTwo))  # goes back to start page
+        button2.pack()
+
+
+# Page One
+class PageTwo(tk.Frame):
+
+    # always creating under init, since always working into each 'sel' call of object
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Page Two!", font=LARGE_FONT)
+        label.pack(pady=10, padx=10)
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(StartPage))  # goes back to start page
+        button1.pack()
+
+        button2 = tk.Button(self, text="Page One",
+                            command=lambda: controller.show_frame(PageOne))  # goes back to start page
+        button2.pack()
+
+
+# when adding new information - create lamda functions which will call game functions in order to run forward
+
+
 # *********** CLASS OBJECTS ***********
 class Pokemon():
     attackList = []
@@ -56,11 +165,12 @@ class Pokemon():
 
     # Creates list of instances of attacks used by Enemy Chosen Pokemon
     @staticmethod
-    def attackList(self,numberChosen):
+    def attackList(self, numberChosen):
         enemyAttackList = [self.attackOne, self.attackTwo,
                            self.attackThree]
 
         return enemyAttackList[numberChosen]
+
 
 class Player(Pokemon):
     def __init__(self, name="None", health=100, healthBars="==========", kind="None", attackOne="None",
@@ -119,7 +229,6 @@ class Enemy(Pokemon):
         return pokemonChosen
 
 
-
 # *********** INSTANCE Functions - Pokemon Lists ***********
 def playerPokemonList():
     # *stores all instances of existing pokemon - can create seperate functions for enemy pokemon and player pokemon
@@ -158,6 +267,7 @@ def barHealth(health):
 
     return barAmount
 
+
 # Consider type/kind advantages - Based on the kind of pokemon, the inflicted damage varies against opponents
 # pokemon kind
 def typeAdvantage(sidedObjectKind, opposingObjectKind, damageAmount):
@@ -167,17 +277,17 @@ def typeAdvantage(sidedObjectKind, opposingObjectKind, damageAmount):
     # player is a FIRE type
     if playerKind == "FIRE":
         if enemyKind == "WATER":  # FIRE is weak against WATER
-            damageAmount /= 2 # reduce damage by half
+            damageAmount /= 2  # reduce damage by half
         elif enemyKind == "GRASS":  # FIRE is strong against GRASS
-            damageAmount *= 1.5 # increase damage by half
-        else: # otherwise, enemyKind is same kind (i.e. FIRE)
-            damageAmount = damageAmount # damage remains the same
+            damageAmount *= 1.5  # increase damage by half
+        else:  # otherwise, enemyKind is same kind (i.e. FIRE)
+            damageAmount = damageAmount  # damage remains the same
 
     # player is a WATER type
     elif playerKind == "WATER":
-        if enemyKind == "GRASS":   # WATER is weak against GRASS
+        if enemyKind == "GRASS":  # WATER is weak against GRASS
             damageAmount /= 2
-        elif enemyKind == "FIRE": # WATER is strong against FIRE
+        elif enemyKind == "FIRE":  # WATER is strong against FIRE
             damageAmount *= 1.5
         else:
             damageAmount = damageAmount
@@ -191,7 +301,6 @@ def typeAdvantage(sidedObjectKind, opposingObjectKind, damageAmount):
             damageAmount *= 1.5
         else:
             damageAmount = damageAmount
-
 
     return damageAmount
 
@@ -211,7 +320,7 @@ def attackOutcome(attackChoice, pokemonSidedObject, pokemonOpposedObject):  # eg
     # Moderate Damage:
     if attackChosen == 1:
         attackDamage = random.randint(18, 25)
-        attackDamage = typeAdvantage(pokemonOnSide,opposingPokemon,attackDamage) # change damage amount!!!
+        attackDamage = typeAdvantage(pokemonOnSide, opposingPokemon, attackDamage)  # change damage amount!!!
 
         newEnemyHealth = opposingPokemon.health - attackDamage  # reduces enemy's health by amount
         opposingPokemon.health = newEnemyHealth
@@ -229,7 +338,7 @@ def attackOutcome(attackChoice, pokemonSidedObject, pokemonOpposedObject):  # eg
 
         elif opposingPokemon.health < 0:  # if health has been reduced negative, it will be capped to value of 0
             opposingPokemon.health = 0
-            print(opposingPokemon.name, "has fainted!\n") # HP has reached 0
+            print(opposingPokemon.name, "has fainted!\n")  # HP has reached 0
 
         print(opposingPokemon.name, "health has been decreased by", attackDamage, "HP and is now at", \
               opposingPokemon.health, "HP.")
@@ -238,7 +347,7 @@ def attackOutcome(attackChoice, pokemonSidedObject, pokemonOpposedObject):  # eg
     # High Range Damage:
     elif attackChosen == 2:
         attackDamage = random.randint(10, 35)
-        attackDamage = typeAdvantage(pokemonOnSide,opposingPokemon,attackDamage) # change damage amount!!!
+        attackDamage = typeAdvantage(pokemonOnSide, opposingPokemon, attackDamage)  # change damage amount!!!
 
         newEnemyHealth = opposingPokemon.health - attackDamage  # reduces enemy's health by amount
         opposingPokemon.health = newEnemyHealth
@@ -270,7 +379,7 @@ def attackOutcome(attackChoice, pokemonSidedObject, pokemonOpposedObject):  # eg
             print("Cast is not effective. Pokemon is already at the max health.\n")
         else:
             cast = random.randint(18, 25)
-            newPlayerHealth = pokemonOnSide.health + cast # increases owns health by amount
+            newPlayerHealth = pokemonOnSide.health + cast  # increases owns health by amount
             pokemonOnSide.health = newPlayerHealth
             pokemonOnSide.healthBars = barHealth(newEnemyHealth)
 
@@ -279,7 +388,6 @@ def attackOutcome(attackChoice, pokemonSidedObject, pokemonOpposedObject):  # eg
             else:
                 print("The cast was not very effective...\n")
             time.sleep(1)
-
 
             if newPlayerHealth > 100:
                 pokemonOnSide.health = 100  # Capped health of 100, doesn't go beyond
@@ -361,7 +469,8 @@ def enemyAttack(enemyObject, playerObject):
     enemyAttackChosen = random.choice(enemyAttackList)
 
     # Address change in turn in battle, index attack randomly selected for ENEMY
-    print("\nEnemy", enemyPokemon.name, "used", str(enemyPokemon.attackList(enemyPokemon, (enemyAttackChosen-1))) + "!")
+    print("\nEnemy", enemyPokemon.name, "used",
+          str(enemyPokemon.attackList(enemyPokemon, (enemyAttackChosen - 1))) + "!")
 
     attackOutcome(enemyAttackChosen, enemyPokemon, playerPokemon)
 
@@ -416,7 +525,7 @@ def battle(playerObject, enemyObject):
 
         # single round continues - Enemy CPU goes second
         enemyAttack(enemyTurn, playerTurn)
-        #check for winner
+        # check for winner
         winner = checkHealth(playerTurn.health, enemyTurn.health, Player(), Enemy())
 
         if winner == "player":  # fake 'enum' type usage in order assert winner of round
@@ -425,7 +534,6 @@ def battle(playerObject, enemyObject):
         elif winner == "enemy":
             print("\nPokemon Trainer RED won the battle!\n")
             break
-
 
         print("\n")
 
@@ -440,15 +548,11 @@ def battle(playerObject, enemyObject):
         print('HP: {:>2s}    HP: {:>4s}'.format(str(playerTurn.healthBars), str(enemyTurn.healthBars)))
 
 
-
-
 # Encompasses all aspects of the game - choosing pokemons, battle rounds, wins/loses, restarting game
 def playGame(playerObject, enemyObject):
-    root = tk.Tk()
-    Draw()
-    Refresher()
-    root.mainloop()
-    
+    app = PokemonGUIApp()
+    app.mainloop()
+
     newRound = True
 
     while newRound:
@@ -461,7 +565,7 @@ def playGame(playerObject, enemyObject):
         time.sleep(1)
         # CREATE PLAYER OBJECTS - USER and CPU
         enemyPlayer = enemyObject  # Enemy Player Object Created
-        enemyPokemon = Enemy.randomPokemonSelected(enemyPlayer) # Enemy randomly chooses pokemon
+        enemyPokemon = Enemy.randomPokemonSelected(enemyPlayer)  # Enemy randomly chooses pokemon
 
         humPlayer = playerObject  # Human (User) Object Created
         playerPokemon = Player.selectPokemon(humPlayer)  # User chooses pokemon
