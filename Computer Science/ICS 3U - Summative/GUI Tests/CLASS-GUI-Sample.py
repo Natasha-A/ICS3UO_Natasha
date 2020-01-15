@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import ttk # 'CSS' for tkinter 
+from tkinter import ttk # 'CSS' for tkinter
+from tkinter import StringVar
 
 LARGE_FONT= ("Verdana", 12)
 
@@ -57,6 +58,13 @@ class StartPage(tk.Frame):
                            command=lambda: controller.show_frame(PageTwo))  # goes to page one
         button.pack()
 
+        message = StringVar()
+
+        message.set("Welcome to Python Pokemon!")
+        label2 = tk.Label(self, textvariable = message) #setting to equation -- changes as it updates using
+        label2.pack()
+
+
 # Page One
 class PageOne(tk.Frame):
 
@@ -73,6 +81,8 @@ class PageOne(tk.Frame):
         button2 = ttk.Button(self, text="Page Two",
                             command=lambda: controller.show_frame(PageTwo))  # goes back to start page
         button2.pack()
+        message.set("Thanks for checking that page!")
+
 
 # Page One
 class PageTwo(tk.Frame):

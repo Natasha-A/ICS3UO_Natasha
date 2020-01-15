@@ -17,7 +17,7 @@ Attack Damage Outcomes
 - Second Attack: Yields in damage by 18 - 35 HP
 - Third Attack: Yields in healing (to own pokemon) by 10 - 25 HP
 
-Type Advantages - Stronger Pokemon - increase attack damage by half. Weaker Pokemon - decreases attack by half
+Type Advantages: Stronger Pokemon - increase attack damage by half... Weaker Pokemon - decreases attack by half
 - FIRE pokemon is STRONGER against GRASS pokemon
 - FIRE pokemon is WEAKER against WATER pokemon
 
@@ -27,80 +27,68 @@ Type Advantages - Stronger Pokemon - increase attack damage by half. Weaker Poke
 - GRASS pokemon is STRONGER against WATER pokemon
 - GRASS pokemon is WEAKER against FIRE pokemon
 '''
-import random
-import time
+import random, time
 import tkinter as tk
-from tkinter import font
-from tkinter import ttk
-
+from tkinter import font, ttk
 # GUI CLASS
 
+root = tk.Tk()
+
 LARGE_FONT = ("Verdana", 12)
-HEIGHT = 700
-WIDTH = 800
-
-class SeaofBTCapp(tk.Tk):
-
-    def __init__(self, *args, **kwargs):
-        # CONFIG PROPERTIES
-        tk.Tk.__init__(self, *args, **kwargs)
-
-        # title and icon display
-        tk.Tk.iconbitmap(self, default="pokeball.bmp")
-        tk.Tk.wm_title(self, "Python Pokemon")
-                                             
-        container = tk.Frame(self)
-
-        container.pack(side="top", fill="both", expand = True)
-
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
-
-        self.frames = {}
-
-        frame = StartPage(container, self)
-
-        self.frames[StartPage] = frame    
-
-        frame.grid(row=0, column=0, sticky="nsew")
-
-        self.show_frame(StartPage)
-
-    def show_frame(self, cont):
-        frame = self.frames[cont] # key value
-        frame.tkraise()
-        
-
-class StartPage(tk.Frame):
-
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self,parent)
-        label = tk.Label(self, text="Start Page", font=LARGE_FONT)
-        label.pack(pady=10,padx=10)
-
-        root = tk.Tk()
-
-        canvas = tk.Canvas(root, height=HEIGHT, width=WIDTH)
-        canvas.pack()
-
-        backgroundImage = tk.PhotoImage(file="battleGround.png")
-        backgroundLabel = tk.Label(root, image=backgroundImage)
-        backgroundLabel.place(relwidth=1, relheight=1)
-
-        frame = tk.Frame(root) # no background added
-        frame.place(relx=0.1, rely=0.8, relwidth=0.8, relheight=0.8)
-
-        
-
-
-
-'''
 #Creating GUI
 HEIGHT = 700
 WIDTH = 800
 #root window
-root = tk.Tk()
 
+# widgets - display canvas and frame sizing
+canvas = tk.Canvas(root, height=HEIGHT, width=WIDTH, bg="blue")
+canvas.pack()
+
+# CREATING BACKGROUND IMAGE
+backgroundImage = tk.PhotoImage(file="battleGround.png")  # update values
+backgroundLabel = tk.Label(root, image=backgroundImage)
+backgroundLabel.place(relwidth=1, relheight=1)
+
+def Draw():
+    global welcomeLabel
+    global secondLabel
+
+    # affects only the text box inside
+    frame = tk.Frame(root, bg="grey")  # no background added
+    frame.place(relx=0.1, rely=0.8, relwidth=0.8, relheight=0.8)
+
+
+    welcomeLabel = tk.Label(frame, text="Welcome to Python Pokemon!")
+    welcomeLabel.pack()
+    root.after(5000, Draw)  # every second...
+
+    secondLabel = tk.Label(frame, text="To begin, choose your character!")
+    secondLabel.pack()
+    root.after(5000, Draw)  # every second..
+
+
+
+
+def SecondDraw():
+    global secondLabel
+
+    frame = tk.Frame(root, width=100, height=100, relief='solid', bd=1)
+    frame.place(x=10, y=10)
+    # CREATING BACKGROUND IMAGE
+
+    secondLabel = tk.Label(frame, text="Choose a pokemon!")
+    secondLabel.pack()
+    root.after(1000, Draw)  # every second...
+
+
+def Refresher():
+    global text
+    secondLabel.configure(text="Trainer RED wants to battle!")
+    print("calling root.after")
+    root.after(5000, Draw)  # every second...
+
+
+'''
 # widgets - display canvas and frame sizing
 canvas = tk.Canvas(root, height=HEIGHT, width=WIDTH)
 canvas.pack()
@@ -110,14 +98,14 @@ backgroundImage = tk.PhotoImage(file="battleGround.png")
 backgroundLabel = tk.Label(root, image=backgroundImage)
 backgroundLabel.place(relwidth=1, relheight=1)
 
-# Using PLACE - Placd objects in exact position
+# Using PLACE - Place objects in exact position
 
 frame = tk.Frame(root) # no background added
 frame.place(relx=0.1, rely=0.8, relwidth=0.8, relheight=0.8)
 
 # label widget
-label = tk.Label(frame,font=("Courier", 17), text="Welcome to Python Pokemon!") # no background added
-label.place(relx=0.3, rely=0, relwidth=0.45, relheight=0.25)
+welcomeLabel = tk.Label(frame,font=("Courier", 17), text="Welcome to Python Pokemon!") # no background added
+welcomeLabel.place(relx=0.3, rely=0, relwidth=0.45, relheight=0.25)
 '''
 '''
 def delay_print(s):
@@ -128,10 +116,8 @@ def delay_print(s):
         time.sleep(0.05)
 '''
 
-
 # *********** CLASS OBJECTS ***********
 class Pokemon():
-
     attackList = []
 
     def __init__(self, name="None", health=100, healthBars="==========", kind="None", attackOne="None",
@@ -543,8 +529,10 @@ def battle(playerObject, enemyObject):
 
 # Encompasses all aspects of the game - choosing pokemons, battle rounds, wins/loses, restarting game
 def playGame(playerObject, enemyObject):
-    app = SeaofBTCapp()
-    app.mainloop()
+    root = tk.Tk()
+    Draw()
+    Refresher()
+    root.mainloop()
     
     newRound = True
 
