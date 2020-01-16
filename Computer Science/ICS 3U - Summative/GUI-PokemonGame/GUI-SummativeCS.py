@@ -41,7 +41,7 @@ WIDTH = 800
 #root window
 
 # widgets - display canvas and frame sizing
-canvas = tk.Canvas(root, height=HEIGHT, width=WIDTH, bg="blue")
+canvas = tk.Canvas(root, height=HEIGHT, width=WIDTH)
 canvas.pack()
 
 # CREATING BACKGROUND IMAGE
@@ -101,7 +101,7 @@ backgroundLabel.place(relwidth=1, relheight=1)
 # Using PLACE - Place objects in exact position
 
 frame = tk.Frame(root) # no background added
-frame.place(r≈)
+frame.place(relx=0.1, rely=0.8, relwidth=0.8, relheight=0.8)
 
 # label widget
 welcomeLabel = tk.Label(frame,font=("Courier", 17), text="Welcome to Python Pokemon!") # no background added
@@ -545,7 +545,7 @@ def playGame(playerObject, enemyObject):
         print("Pokemon Trainer RED wants to battle!\n")
         time.sleep(1)
         # CREATE PLAYER OBJECTS - USER and CPU
-        enemyPlayer = enemyObject  # Enemy Player Object Created
+        enemyPlayer = enemyObject  # Enemy Player Object Instantiated
         enemyPokemon = Enemy.randomPokemonSelected(enemyPlayer) # Enemy randomly chooses pokemon
 
         humPlayer = playerObject  # Human (User) Object Created

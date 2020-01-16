@@ -34,12 +34,105 @@ from tkinter import font, ttk
 # CONSTANTS (HENCE ALL CAPS)
 LARGE_FONT = ("Verdana", 30)
 
+# have to set up globals -- which are called throughout classes 
+
+# *********** CLASS OBJECTS ***********
+
+class Pokemon():
+    attackList = []
+
+    def __init__(self, name="None", health=100, healthBars="==========", kind="None", attackOne="None",
+                 attackTwo="None",
+                 attackThree="None"):
+        self.allPokemon = []
+        self.name = name
+        self.health = health
+        self.healthBars = healthBars
+        self.kind = kind
+        self.attackOne = attackOne
+        self.attackTwo = attackTwo
+        self.attackThree = attackThree
+
+    # displays main stats during battle
+    def playerInfo(self):
+        return '-- Player Info --\nName: {}\nHealth: {}\nHP: \n'.format(
+            self.name,
+            self.health,
+            self.healthBars)
+
+    # Creates list of instances of attacks used by Enemy Chosen Pokemon
+    @staticmethod
+    def attackList(self, numberChosen):
+        enemyAttackList = [self.attackOne, self.attackTwo,
+                           self.attackThree]
+
+        return enemyAttackList[numberChosen]
+
+
+class Player(Pokemon):
+    def __init__(self, name="None", health=100, healthBars="==========", kind="None", attackOne="None",
+                 attackTwo="None",
+                 attackThree="None"):
+        super().__init__(name, health, healthBars, kind, attackOne, attackTwo, attackThree)
+
+    # create property for number of wins?
+
+    @staticmethod
+    def selectPokemon(self, pokemonSelected):
+        print("pokemonSelected Value:", pokemonSelected)
+        checkPokemon = True
+        pokemons = playerPokemonList()
+        dash = "-" * 30
+        print(dash)
+        print('{:>20}'.format("POKEMON INDEX"))
+        print(dash)
+
+        for pokemonIndex in range(len(pokemons)):
+            print(str(pokemonIndex + 1) + ": " + pokemons[pokemonIndex].name, "- TYPE:", pokemons[pokemonIndex].kind)
+
+        while checkPokemon:
+            try:
+                if int(pokemonSelected) > 0 and int(pokemonSelected) <= (len(pokemons)):
+                    print("Selected Pokemon:", pokemons[int(pokemonSelected)-1].name)
+                    return pokemons[int(pokemonSelected)-1]  # print out pokemon at index of chosen pokemon (1,2,3)
+                     # returns instance of pokemon -- eg, charmander, bulbasaur, squirtle
+
+                else:
+                    raise AssertionError
+
+            except AssertionError:
+                print("Incorrect input. Please enter the # for one of the pokemons above.")
+                checkPokemon = True
+            except ValueError:
+                print("Incorrect value type. Please enter one of the numbers above.")
+
+
+class Enemy(Pokemon):
+
+    def __init__(self, name="None", health=100, healthBars="=====", kind="None", attackOne="None", attackTwo="None",
+                 attackThree="None"):
+        super().__init__(name, health, healthBars, kind, attackOne, attackTwo, attackThree)
+
+    # Enemy chooses pokemon at random
+    @staticmethod
+    def randomPokemonSelected(self):
+        pokemons = enemyPokemonList()
+        pokemonChosen = random.choice(pokemons)
+
+        nameOfPokemon = pokemonChosen.name
+
+        print("Pokemon Trainer RED sent out", str(nameOfPokemon) + "!\n")
+        time.sleep(0.7)
+
+        return pokemonChosen
+
+
 
 # *********** GUI CLASS OBJECTS ***********
 class PokemonGUIApp(tk.Tk):
 
     def __init__(self, *args, **kwargs):
-        # CONFIG PROPERTIES - for container
+        # CONFIG PROPERTIES - for container/frames
         tk.Tk.__init__(self, *args, **kwargs)
         container = tk.Frame(self)
 
@@ -51,7 +144,7 @@ class PokemonGUIApp(tk.Tk):
         self.frames = {}
 
         # runs through pages - saving the frames added, and bringing to the front
-        for F in (StartPage, PageOne, PageTwo):
+        for F in (StartPage, PageOne, PageTwo, PageThree):
             frame = F(container, self)
 
             self.frames[F] = frame
@@ -101,41 +194,44 @@ class PageOne(tk.Frame):
         label = tk.Label(self, text="Pokemon Trainer RED wants to battle!", font=LARGE_FONT)
         label.pack(pady=10, padx=10)
 
-        # CREATE PLAYER OBJECTS - USER and CPU
-        enemyPlayer = Enemy()  # Enemy Player Object Created
-        enemyPokemon = Enemy.randomPokemonSelected(enemyPlayer)  # Enemy randomly chooses pokemon
-
-        textEnemy = "Sent out:" + str(enemyPokemon.name)
-
-        label2 = tk.Label(self, text=textEnemy, font=LARGE_FONT)
-        label2.pack()
-
-
         # goes to page two
         button2 = tk.Button(self, text="Next",
                             command=lambda: controller.show_frame(PageTwo))  # goes back to start page
         button2.pack()
 
 
-# Page Two
 class PageTwo(tk.Frame):
-    # always creating under init, since always working into each 'sel' call of object
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-        def getChosenPokemon(entry):
-            humPlayer = Player()  # Human (User) Object Created
-            playerPokemon = Player.selectPokemon(entry)  # Enemy randomly chooses pokemon
 
-            chosenPk = "You chose:" + str(playerPokemon)
+    def __init__(self, parent, controller):
+
+        tk.Frame.__init__(self, parent)
+
+        # ENEMY OBJECT INSTANTIATED
+        # needs to be global in order to be accessed throughout GUI and non-gui classes and functions
+        global enemyPokemonChosen
+        enemyPokemonChosen = Enemy.randomPokemonSelected(ENEMY)  # Enemy randomly chooses pokemon
+
+        textEnemy = "Pokemon Trainer RED sent out " + str(enemyPokemonChosen.name) + "!"
+
+        label2 = tk.Label(self, text=textEnemy, font=LARGE_FONT)
+        label2.pack()
+
+        # always creating under init, since always working into each 'sel' call of object
+        def getChosenPokemon(entry):
+            # PLAYER OBJECT INSTANTIATED
+            global playerPokemonChosen
+            playerPokemonChosen = Player.selectPokemon(PLAYER, entry)  # Human chooses pokemon from list
+            chosenPk = "You chose:" + str(playerPokemonChosen.name)
 
             chosenPokemon = tk.Label(self, text=chosenPk, font=LARGE_FONT)
             chosenPokemon.pack()
+
 
         label = tk.Label(self, text="Which Pokemon will you choose?", font=LARGE_FONT)
         label.pack(pady=10, padx=10)
 
         button2 = tk.Button(self, text="Next",
-                            command=lambda: controller.show_frame(PageOne))  # goes back to start page
+                            command=lambda: controller.show_frame(PageThree))  # goes back to start page
         button2.pack()
 
 
@@ -155,108 +251,21 @@ class PageTwo(tk.Frame):
         pokemon3.pack(pady=10, padx=10)
 
 
+# Battle begin - create images of selected pokemon, and continue game in text format... CONTINUE THE GAME - EXIT BUTTON
+class PageThree(PageTwo,tk.Frame):
+    # always creating under init, since always working into each 'sel' call of object
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
 
+        label = tk.Label(self, text="Battle Begins!", font=LARGE_FONT)
+        label.pack(pady=10, padx=10)
 
-
-
-        #entryPlayer = "You have chosen!" + str(playerPokemon.name)
-
-        #label2 = tk.Label(self, text=entryPlayer, font=LARGE_FONT)
-        #label2.pack()
-
-
-
-
-
+        # button to say exit out of main loop!
+        button2 = tk.Button(self, text="Next",
+                            command=lambda: controller.show_frame(PageOne))  # goes back to start page
 
 
 # when adding new information - create lamda functions which will call game functions in order to run forward
-
-
-# *********** CLASS OBJECTS ***********
-class Pokemon():
-    attackList = []
-
-    def __init__(self, name="None", health=100, healthBars="==========", kind="None", attackOne="None",
-                 attackTwo="None",
-                 attackThree="None"):
-        self.allPokemon = []
-        self.name = name
-        self.health = health
-        self.healthBars = healthBars
-        self.kind = kind
-        self.attackOne = attackOne
-        self.attackTwo = attackTwo
-        self.attackThree = attackThree
-
-    # displays main stats during battle
-    def playerInfo(self):
-        return '-- Player Info --\nName: {}\nHealth: {}\nHP: \n'.format(
-            self.name,
-            self.health,
-            self.healthBars)
-
-    # Creates list of instances of attacks used by Enemy Chosen Pokemon
-    @staticmethod
-    def attackList(self, numberChosen):
-        enemyAttackList = [self.attackOne, self.attackTwo,
-                           self.attackThree]
-
-        return enemyAttackList[numberChosen]
-
-
-class Player(Pokemon):
-    def __init__(self, name="None", health=100, healthBars="==========", kind="None", attackOne="None",
-                 attackTwo="None",
-                 attackThree="None"):
-        super().__init__(name, health, healthBars, kind, attackOne, attackTwo, attackThree)
-
-    # create property for number of wins?
-
-    @staticmethod
-    def selectPokemon(pokemonSelected):
-        checkPokemon = True
-        pokemons = playerPokemonList()
-        dash = "-" * 30
-        print(dash)
-        print('{:>20}'.format("POKEMON INDEX"))
-        print(dash)
-
-        for pokemonIndex in range(len(pokemons)):
-            print(str(pokemonIndex + 1) + ": " + pokemons[pokemonIndex].name, "- TYPE:", pokemons[pokemonIndex].kind)
-
-        while checkPokemon:
-            try:
-                if int(pokemonSelected) > 0 and int(pokemonSelected) <= (len(pokemons)):
-                    return pokemons[int(pokemonSelected)].name  # print out pokemon at index of chosen pokemon (1,2,3)
-                else:
-                    raise AssertionError
-
-            except AssertionError:
-                print("Incorrect input. Please enter the # for one of the pokemons above.")
-                checkPokemon = True
-            except ValueError:
-                print("Incorrect value type. Please enter one of the numbers above.")
-
-
-class Enemy(Pokemon):
-
-    def __init__(self, name="None", health=100, healthBars="=====", kind="None", attackOne="None", attackTwo="None",
-                 attackThree="None"):
-        super().__init__(name, health, healthBars, kind, attackOne, attackTwo, attackThree)
-
-    # Enemy chooses pokemon at random
-    @staticmethod
-    def randomPokemonSelected(self):
-        pokemons = enemyPokemonList()
-        pokemonChosen = random.choice(pokemons)
-
-        nameOfPokemon = pokemonChosen.name
-
-        print("Pokemon Trainer RED sent out", str(nameOfPokemon) + "!\n")
-        time.sleep(0.7)
-
-        return pokemonChosen
 
 
 # *********** INSTANCE Functions - Pokemon Lists ***********
@@ -580,32 +589,36 @@ def battle(playerObject, enemyObject):
 
 # Encompasses all aspects of the game - choosing pokemons, battle rounds, wins/loses, restarting game
 def playGame(playerObject, enemyObject):
-    app = PokemonGUIApp()
-    app.mainloop()
+
+    # Global Objects Created to be used between GUI classes and text-based game classes
+    global PLAYER
+    PLAYER = playerObject
+    global ENEMY
+    ENEMY = enemyObject
 
     newRound = True
+
+    # Run GUI application main loop before proceeding with text-based game.
+    app = PokemonGUIApp()
+    app.mainloop()
 
     while newRound:
         continueCheckingForInput = True
 
-        # INITIAL TITLE
-        print("\nWelcome to Python Pokemon!\n")
-        time.sleep(1.5)
-        print("Pokemon Trainer RED wants to battle!\n")
-        time.sleep(1)
-        # CREATE PLAYER OBJECTS - USER and CPU
-        enemyPlayer = enemyObject  # Enemy Player Object Created
-        enemyPokemon = Enemy.randomPokemonSelected(enemyPlayer)  # Enemy randomly chooses pokemon
+        # assign global enemyPokemonChosen and playerPokemonChosen created in GUI class PageTwo() as variables for \
+        # battle round
+        enemyPokemon = enemyPokemonChosen
+        playerPokemon = playerPokemonChosen
 
-        humPlayer = playerObject  # Human (User) Object Created
-        playerPokemon = Player.selectPokemon(humPlayer)  # User chooses pokemon
+        print("\nGO!", playerPokemonChosen.name + "!")
 
-        battle(playerPokemon,
-               enemyPokemon)  # repeats until health of a player is zero -- then moves onto next line:
-        # BATTLE ROUND PLAYED
+        # Battle round begins
+        battle(playerPokemon, enemyPokemon)  # repeats until health of a player is zero
+
+        # SINGLE BATTLE ROUND FINISHED
         while continueCheckingForInput:
             try:
-                runProgram = input("Battle again? ").lower()
+                runProgram = input("Would you like to battle again? ").lower()
                 print("\n")
 
                 if runProgram == "yes":
