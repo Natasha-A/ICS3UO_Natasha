@@ -257,12 +257,17 @@ class PageThree(PageTwo,tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
+        def closeWindow():
+            controller.destroy()
+
         label = tk.Label(self, text="Battle Begins!", font=LARGE_FONT)
         label.pack(pady=10, padx=10)
 
         # button to say exit out of main loop!
-        button2 = tk.Button(self, text="Next",
-                            command=lambda: controller.show_frame(PageOne))  # goes back to start page
+        #button = tk.Label(self, text="Quit", command=lambda: closeWindow())
+        button = tk.Button(self, text="Quit", command=controller.quit)
+
+        button.pack(pady=20, padx=20)
 
 
 # when adding new information - create lamda functions which will call game functions in order to run forward
@@ -607,6 +612,10 @@ def playGame(playerObject, enemyObject):
 
         # assign global enemyPokemonChosen and playerPokemonChosen created in GUI class PageTwo() as variables for \
         # battle round
+        global playerPokemonChosen
+        global enemyPokemonChosen
+
+
         enemyPokemon = enemyPokemonChosen
         playerPokemon = playerPokemonChosen
 
