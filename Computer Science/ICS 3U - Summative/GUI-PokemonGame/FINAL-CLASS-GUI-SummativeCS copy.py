@@ -1,6 +1,6 @@
 '''
 Name: Natasha Ahammed
-Date: January 9 2020
+Date: January 16 2020
 File Name: Natasha_Ahammed_SummativeCS.py
 Description: Pokemon Game Based off of Turn-Based Battles. Player battles with Computer AI in a series of rounds \
 where a pokemon is chosen and different attacks can be chosen yielding in different amounts of damage or healing \
@@ -31,10 +31,8 @@ import random, time
 import tkinter as tk
 from tkinter import font, ttk
 
-# CONSTANTS (HENCE ALL CAPS)
+# CONSTANTS
 LARGE_FONT = ("Verdana", 30)
-
-# have to set up globals -- which are called throughout classes 
 
 # *********** CLASS OBJECTS ***********
 
@@ -60,7 +58,7 @@ class Pokemon():
             self.health,
             self.healthBars)
 
-    # Creates list of instances of attacks used by Enemy Chosen Pokemon
+    # Creates list of of attack attributes used by Enemy Chosen Pokemon
     @staticmethod
     def attackList(self, numberChosen):
         enemyAttackList = [self.attackOne, self.attackTwo,
@@ -75,36 +73,15 @@ class Player(Pokemon):
                  attackThree="None"):
         super().__init__(name, health, healthBars, kind, attackOne, attackTwo, attackThree)
 
-    # create property for number of wins?
-
     @staticmethod
+
+    # Allow player to select pokemon from list
     def selectPokemon(self, pokemonSelected):
-        print("pokemonSelected Value:", pokemonSelected)
-        checkPokemon = True
         pokemons = playerPokemonList()
-        dash = "-" * 30
-        print(dash)
-        print('{:>20}'.format("POKEMON INDEX"))
-        print(dash)
 
-        for pokemonIndex in range(len(pokemons)):
-            print(str(pokemonIndex + 1) + ": " + pokemons[pokemonIndex].name, "- TYPE:", pokemons[pokemonIndex].kind)
+        return pokemons[int(pokemonSelected)-1]  # print out pokemon at index of chosen pokemon (1,2,3)
+        # returns instance of pokemon -- eg, charmander, bulbasaur, squirtle
 
-        while checkPokemon:
-            try:
-                if int(pokemonSelected) > 0 and int(pokemonSelected) <= (len(pokemons)):
-                    print("Selected Pokemon:", pokemons[int(pokemonSelected)-1].name)
-                    return pokemons[int(pokemonSelected)-1]  # print out pokemon at index of chosen pokemon (1,2,3)
-                     # returns instance of pokemon -- eg, charmander, bulbasaur, squirtle
-
-                else:
-                    raise AssertionError
-
-            except AssertionError:
-                print("Incorrect input. Please enter the # for one of the pokemons above.")
-                checkPokemon = True
-            except ValueError:
-                print("Incorrect value type. Please enter one of the numbers above.")
 
 
 class Enemy(Pokemon):
@@ -118,11 +95,6 @@ class Enemy(Pokemon):
     def randomPokemonSelected(self):
         pokemons = enemyPokemonList()
         pokemonChosen = random.choice(pokemons)
-
-        nameOfPokemon = pokemonChosen.name
-
-        print("Pokemon Trainer RED sent out", str(nameOfPokemon) + "!\n")
-        time.sleep(0.7)
 
         return pokemonChosen
 
@@ -184,7 +156,6 @@ class StartPage(tk.Frame):
                            command=lambda: controller.show_frame(PageOne))  # goes to page one
         button.pack(side="right")
 
-
 # Page One
 class PageOne(tk.Frame):
 
@@ -199,12 +170,33 @@ class PageOne(tk.Frame):
                             command=lambda: controller.show_frame(PageTwo))  # goes back to start page
         button2.pack()
 
-
 class PageTwo(tk.Frame):
 
     def __init__(self, parent, controller):
 
         tk.Frame.__init__(self, parent)
+
+        # PLAYER OBJECT INSTANTIATED - User enters chosen pokemon
+        def getChosenPokemon(entry):
+            global playerPokemonChosen # allow other classes and functions to access state of Player object
+
+            try:
+                if int(entry) > 0 and int(entry) <= 3:
+                    playerPokemonChosen = Player.selectPokemon(PLAYER, entry)  # Human chooses pokemon from list
+
+                    # Display User's chosen pokemon for battle
+                    textPlayer = "You sent out " + str(playerPokemonChosen.name) + "!"
+                    playerChosenLabel = tk.Label(self, text=textPlayer, font=LARGE_FONT)
+                    playerChosenLabel.pack()
+
+                    button2.configure(state='normal')
+                    entryButton.configure(state='disabled')
+
+                else:
+                    raise AssertionError
+
+            except AssertionError:
+                button2.configure(state='disabled')
 
         # ENEMY OBJECT INSTANTIATED
         # needs to be global in order to be accessed throughout GUI and non-gui classes and functions
@@ -213,19 +205,9 @@ class PageTwo(tk.Frame):
 
         textEnemy = "Pokemon Trainer RED sent out " + str(enemyPokemonChosen.name) + "!"
 
-        label2 = tk.Label(self, text=textEnemy, font=LARGE_FONT)
-        label2.pack()
-
-        # always creating under init, since always working into each 'sel' call of object
-        def getChosenPokemon(entry):
-            # PLAYER OBJECT INSTANTIATED
-            global playerPokemonChosen
-            playerPokemonChosen = Player.selectPokemon(PLAYER, entry)  # Human chooses pokemon from list
-            chosenPk = "You chose:" + str(playerPokemonChosen.name)
-
-            chosenPokemon = tk.Label(self, text=chosenPk, font=LARGE_FONT)
-            chosenPokemon.pack()
-
+        # Display enemyChosen Label
+        enemyChosenLabel = tk.Label(self, text=textEnemy, font=LARGE_FONT)
+        enemyChosenLabel.pack()
 
         label = tk.Label(self, text="Which Pokemon will you choose?", font=LARGE_FONT)
         label.pack(pady=10, padx=10)
@@ -313,7 +295,7 @@ def barHealth(health):
 
 
 # Consider type/kind advantages - Based on the kind of pokemon, the inflicted damage varies against opponents
-# pokemon kind
+# pokemon kinds (ie FIRE, WATER, GRASS)
 def typeAdvantage(sidedObjectKind, opposingObjectKind, damageAmount):
     playerKind = sidedObjectKind
     enemyKind = opposingObjectKind
@@ -335,7 +317,6 @@ def typeAdvantage(sidedObjectKind, opposingObjectKind, damageAmount):
             damageAmount *= 1.5
         else:
             damageAmount = damageAmount
-
 
     # player is a GRASS type
     elif playerKind == "GRASS":
@@ -615,14 +596,10 @@ def playGame(playerObject, enemyObject):
         global playerPokemonChosen
         global enemyPokemonChosen
 
-
-        enemyPokemon = enemyPokemonChosen
-        playerPokemon = playerPokemonChosen
-
         print("\nGO!", playerPokemonChosen.name + "!")
 
         # Battle round begins
-        battle(playerPokemon, enemyPokemon)  # repeats until health of a player is zero
+        battle(playerPokemonChosen, enemyPokemonChosen)  # repeats until health of a player is zero
 
         # SINGLE BATTLE ROUND FINISHED
         while continueCheckingForInput:
