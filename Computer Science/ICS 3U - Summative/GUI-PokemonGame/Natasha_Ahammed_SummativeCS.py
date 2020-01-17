@@ -84,7 +84,6 @@ class Player(Pokemon):
         super().__init__(name, health, healthBars, kind, attackOne, attackTwo, attackThree, image)
 
     @staticmethod
-
     # Allow player to select pokemon from list
     def selectPokemon(self, pokemonSelected):
         pokemons = playerPokemonList()
