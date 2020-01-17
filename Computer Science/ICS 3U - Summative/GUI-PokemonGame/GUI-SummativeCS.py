@@ -45,7 +45,7 @@ canvas = tk.Canvas(root, height=HEIGHT, width=WIDTH)
 canvas.pack()
 
 # CREATING BACKGROUND IMAGE
-backgroundImage = tk.PhotoImage(file="battleGround.png")  # update values
+backgroundImage = tk.PhotoImage(file="battleScreen.png")  # update values
 backgroundLabel = tk.Label(root, image=backgroundImage)
 backgroundLabel.place(relwidth=1, relheight=1)
 

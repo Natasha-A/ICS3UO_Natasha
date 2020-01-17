@@ -10,8 +10,16 @@ combinations, testing all functions individually and collectively. Use of Try an
 for user inputs, and Integration Testing to ensure that algorithms produced correct results and no logic errors. Made
 use of PyCharm's Automated Testing in order to detect and replace unreachable code.
 
-REVEALED ASPECTS
+- GUI APPLICATION -
+As a part of extended research and understanding of application development, I decided to create an intro GUI interface.
+Working with Tkinter offers many benefits since it's framework is very expansive and flexible to work with. Coupled
+trial/error and investigating through documentation I was able to create a interface despite my limited
+experience with application life cycles. Please ignore the globals within the GUI classes. I had to do what I had to do.
 
+You must click the respective button in order to continue. If the interface does not populate or crashes,
+just exit the window and the text-program will continue to run.
+
+- REVEALED ASPECTS -
 Attack Damage Outcomes
 - First Attack: Yields in damage by 10 - 25 HP
 - Second Attack: Yields in damage by 18 - 35 HP
@@ -27,12 +35,13 @@ Type Advantages: Stronger Pokemon - increase attack damage by half... Weaker Pok
 - GRASS pokemon is STRONGER against WATER pokemon
 - GRASS pokemon is WEAKER against FIRE pokemon
 '''
+
 import random, time
 import tkinter as tk
 from tkinter import font, ttk
 
 # CONSTANTS
-LARGE_FONT = ("Verdana", 30)
+LARGE_FONT = ("Courier", 18)
 
 # *********** CLASS OBJECTS ***********
 
@@ -41,7 +50,7 @@ class Pokemon():
 
     def __init__(self, name="None", health=100, healthBars="==========", kind="None", attackOne="None",
                  attackTwo="None",
-                 attackThree="None"):
+                 attackThree="None", image="No Image"):
         self.allPokemon = []
         self.name = name
         self.health = health
@@ -50,6 +59,7 @@ class Pokemon():
         self.attackOne = attackOne
         self.attackTwo = attackTwo
         self.attackThree = attackThree
+        self.image = image
 
     # displays main stats during battle
     def playerInfo(self):
@@ -70,8 +80,8 @@ class Pokemon():
 class Player(Pokemon):
     def __init__(self, name="None", health=100, healthBars="==========", kind="None", attackOne="None",
                  attackTwo="None",
-                 attackThree="None"):
-        super().__init__(name, health, healthBars, kind, attackOne, attackTwo, attackThree)
+                 attackThree="None", image="No Image"):
+        super().__init__(name, health, healthBars, kind, attackOne, attackTwo, attackThree, image)
 
     @staticmethod
 
@@ -83,12 +93,11 @@ class Player(Pokemon):
         # returns instance of pokemon -- eg, charmander, bulbasaur, squirtle
 
 
-
 class Enemy(Pokemon):
 
     def __init__(self, name="None", health=100, healthBars="=====", kind="None", attackOne="None", attackTwo="None",
-                 attackThree="None"):
-        super().__init__(name, health, healthBars, kind, attackOne, attackTwo, attackThree)
+                 attackThree="None", image="No Image"):
+        super().__init__(name, health, healthBars, kind, attackOne, attackTwo, attackThree, image)
 
     # Enemy chooses pokemon at random
     @staticmethod
@@ -99,32 +108,29 @@ class Enemy(Pokemon):
         return pokemonChosen
 
 
-
 # *********** GUI CLASS OBJECTS ***********
 class PokemonGUIApp(tk.Tk):
 
     def __init__(self, *args, **kwargs):
-        # CONFIG PROPERTIES - for container/frames
         tk.Tk.__init__(self, *args, **kwargs)
         container = tk.Frame(self)
 
-        container.pack(side="top", fill="both", expand=True)
+        container.pack(ipadx=200,ipady=600)
 
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
 
-        # runs through pages - saving the frames added, and bringing to the front
+        # runs through pages - saving the frames added, and bringing to the front (MVC model)
         for F in (StartPage, PageOne, PageTwo, PageThree):
             frame = F(container, self)
 
             self.frames[F] = frame
 
-            #allows to remove add as go along
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(StartPage)
+        self.show_frame(StartPage) # Start Page appears on load
 
     def show_frame(self, cont):
         frame = self.frames[cont]
@@ -135,26 +141,22 @@ class StartPage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)  # takes frame from parent
+
         self.parent = parent
 
-        backgroundImage = tk.PhotoImage(file="battleGround.png")  # update values
+        # Background Image Created and placed into file
+        backgroundImage = tk.PhotoImage(file="startPage.png")  # update values
         backgroundLabel = tk.Label(self, image=backgroundImage)
         backgroundLabel.photo = backgroundImage
         backgroundLabel.place(relwidth=1, relheight=1)
 
-
-        label = tk.Label(self, text="Welcome to Python Pokemon!", font=LARGE_FONT)
-
-        # Potential UI configs
-        #label.place(relx=0.3, rely=0, relwidth=0.45, relheight=0.25)
-        #label.pack(side="bottom", fill="x")
-        #label.place(relx=0.3, rely=0.4, relwidth=0.45, relheight=0.25)
-        label.pack(side="bottom", fill="x")
-
         # goes to page one
-        button = tk.Button(self, text="Next",
-                           command=lambda: controller.show_frame(PageOne))  # goes to page one
-        button.pack(side="right")
+        startButtonPhoto = tk.PhotoImage(file="tapButton.png")  # update values
+
+        button = tk.Button(self,
+                           command=lambda: controller.show_frame(PageOne), image=startButtonPhoto)  # goes to page one
+        button.photo = startButtonPhoto
+        button.pack(side="bottom", pady=90)
 
 # Page One
 class PageOne(tk.Frame):
@@ -165,16 +167,40 @@ class PageOne(tk.Frame):
         label = tk.Label(self, text="Pokemon Trainer RED wants to battle!", font=LARGE_FONT)
         label.pack(pady=10, padx=10)
 
+        # Background Image Created and placed into file
+        backgroundImage = tk.PhotoImage(file="trainerRed.png")  # update values
+        backgroundLabel = tk.Label(self, image=backgroundImage)
+        backgroundLabel.photo = backgroundImage
+        backgroundLabel.place(relwidth=1, relheight=1)
+
         # goes to page two
-        button2 = tk.Button(self, text="Next",
-                            command=lambda: controller.show_frame(PageTwo))  # goes back to start page
-        button2.pack()
+        nextButtonPhoto = tk.PhotoImage(file="nextButtonFile.png")  # update values
+
+        nextBtn = tk.Button(self,
+                            command=lambda: controller.show_frame(PageTwo), image=nextButtonPhoto)
+        nextBtn.photo = nextButtonPhoto
+        nextBtn.pack(side="right", padx=250, pady=40)
 
 class PageTwo(tk.Frame):
 
     def __init__(self, parent, controller):
 
         tk.Frame.__init__(self, parent)
+
+        # affects only the text box inside
+        frame = tk.Frame(self, bd=20)  # no background added
+        frame.place(relx=0.1, rely=0.8, relwidth=0.8, relheight=0.8)
+
+        # lower frame - below entry and button
+        battleFrame = tk.Frame(self, bg='#80c1ff', bd=10)
+        battleFrame.place(relx=0.5, rely=0.1, relwidth=0.75, relheight=0.6, anchor='n')
+
+        # creates fonts - with size in px
+        # puts into left with border
+        label = tk.Label(battleFrame, font=("Courier", 25), anchor='nw', justify='left',
+                         bd=4)  # inside lowerframe, and remains within border of frame, and fills completely
+        # places off by 0.3 from button, width is greater, height same
+        label.place(relwidth=1, relheight=1)
 
         # PLAYER OBJECT INSTANTIATED - User enters chosen pokemon
         def getChosenPokemon(entry):
@@ -184,53 +210,64 @@ class PageTwo(tk.Frame):
                 if int(entry) > 0 and int(entry) <= 3:
                     playerPokemonChosen = Player.selectPokemon(PLAYER, entry)  # Human chooses pokemon from list
 
+                    # POKEMON IMAGE
+                    # Background Image Created and placed into file
+                    pokemonImage = tk.PhotoImage(file=playerPokemonChosen.image)
+                    pokemonSprite = tk.Label(battleFrame, image=pokemonImage)
+                    pokemonSprite.photo = pokemonImage
+                    pokemonSprite.place(relx=0.02, relwidth=0.3,relheight=1)
+
                     # Display User's chosen pokemon for battle
                     textPlayer = "You sent out " + str(playerPokemonChosen.name) + "!"
-                    playerChosenLabel = tk.Label(self, text=textPlayer, font=LARGE_FONT)
+                    playerChosenLabel = tk.Label(frame, text=textPlayer, font=LARGE_FONT)
                     playerChosenLabel.pack()
 
-                    button2.configure(state='normal')
+                    nextButton.configure(state='normal')
                     entryButton.configure(state='disabled')
+
 
                 else:
                     raise AssertionError
 
             except AssertionError:
-                button2.configure(state='disabled')
+                print("error raised")
+                nextButton.configure(state='disabled')
+
+            except ValueError:
+                print("incorrect value type.")
 
         # ENEMY OBJECT INSTANTIATED
         # needs to be global in order to be accessed throughout GUI and non-gui classes and functions
         global enemyPokemonChosen
         enemyPokemonChosen = Enemy.randomPokemonSelected(ENEMY)  # Enemy randomly chooses pokemon
 
+        # ENEMY POKEMON IMAGE
+        pokemonEnemyImage = tk.PhotoImage(file=enemyPokemonChosen.image)
+        print(enemyPokemonChosen.image)  # update values
+        pokemonEnemySprite = tk.Label(battleFrame, image=pokemonEnemyImage)
+        pokemonEnemySprite.photo = pokemonEnemyImage
+        pokemonEnemySprite.place(relx=0.7, relwidth=0.3,relheight=1)
+
         textEnemy = "Pokemon Trainer RED sent out " + str(enemyPokemonChosen.name) + "!"
 
-        # Display enemyChosen Label
-        enemyChosenLabel = tk.Label(self, text=textEnemy, font=LARGE_FONT)
-        enemyChosenLabel.pack()
 
-        label = tk.Label(self, text="Which Pokemon will you choose?", font=LARGE_FONT)
-        label.pack(pady=10, padx=10)
-
-        button2 = tk.Button(self, text="Next",
-                            command=lambda: controller.show_frame(PageThree))  # goes back to start page
-        button2.pack()
-
-
-        pokemon1 = tk.Label(self, text="Charmander", font=LARGE_FONT)
-        pokemon2 = tk.Label(self, text="Bulbasaur", font=LARGE_FONT)
-        pokemon3 = tk.Label(self, text="Squirtle", font=LARGE_FONT)
-
-        entry = tk.Entry(self, font=("Courier", 18), bg="green")
+        entry = tk.Entry(frame, font=("Courier", 18))
         entry.pack()
-        entryButton = tk.Button(self, text="Get Chosen Pokemon", font=("Courier", 16),bg="green",
+        entryButton = tk.Button(frame, text="Tap to Choose", font=("Courier", 16),bg="green",
                            command=lambda: getChosenPokemon(entry.get()))  # DISPLAYS ENTRY text
+        entry.insert(0, "Enter #")
 
-        entryButton.pack(pady=10, padx=10)
+        entryButton.place(relx=0.8, relwidth=0.2, relheight=0.2)
 
-        pokemon1.pack(pady=10, padx=10)
-        pokemon2.pack(pady=10, padx=10)
-        pokemon3.pack(pady=10, padx=10)
+        nextButton = tk.Button(frame, text="Next", font=LARGE_FONT,
+                            command=lambda: controller.show_frame(PageThree))  # goes back to start page
+        nextButton.place(relwidth=0.2, relheight=0.2)
+
+
+
+        # Display enemyChosen Label
+        enemyChosenLabel = tk.Label(frame, text=textEnemy, font=LARGE_FONT)
+        enemyChosenLabel.pack()
 
 
 # Battle begin - create images of selected pokemon, and continue game in text format... CONTINUE THE GAME - EXIT BUTTON
@@ -238,9 +275,6 @@ class PageThree(PageTwo,tk.Frame):
     # always creating under init, since always working into each 'sel' call of object
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-
-        def closeWindow():
-            controller.destroy()
 
         label = tk.Label(self, text="Battle Begins!", font=LARGE_FONT)
         label.pack(pady=10, padx=10)
@@ -258,9 +292,9 @@ class PageThree(PageTwo,tk.Frame):
 # *********** INSTANCE Functions - Pokemon Lists ***********
 def playerPokemonList():
     # *stores all instances of existing pokemon - can create seperate functions for enemy pokemon and player pokemon
-    charmander = Pokemon("CHARMANDER", 100, "==========", "FIRE", "FLAMETHROWER", "FIRE SPIN", "CAST")
-    bulbasaur = Pokemon("BULBASAUR", 100, "==========", "GRASS", "VINE WHIP", "LEECH SEED", "CAST")
-    squirtle = Pokemon("SQUIRTLE", 100, "==========", "WATER", "WATER SPLASH", "AQUA TAIL", "CAST")
+    charmander = Pokemon("CHARMANDER", 100, "==========", "FIRE", "FLAMETHROWER", "FIRE SPIN", "CAST","bulba.png")
+    bulbasaur = Pokemon("BULBASAUR", 100, "==========", "GRASS", "VINE WHIP", "LEECH SEED", "CAST", "bulba.png")
+    squirtle = Pokemon("SQUIRTLE", 100, "==========", "WATER", "WATER SPLASH", "AQUA TAIL", "CAST", "bulba.png")
     pokemons = [charmander, bulbasaur, squirtle]
 
     return pokemons
@@ -268,9 +302,9 @@ def playerPokemonList():
 
 def enemyPokemonList():
     # *stores all instances of existing pokemon - can create seperate functions for enemy pokemon and player pokemon
-    flareon = Pokemon("FLAREON", 100, "==========", "FIRE", "FIRE SLASH", "BLAZE BALL", "CAST")
-    breloom = Pokemon("BRELOOM", 100, "==========", "GRASS", "RAZOR LEAF", "SPIT POISON", "CAST")
-    magikarp = Pokemon("MAGIKARP", 100, "==========", "WATER", "KARATE CHOP", "SUBMERGE", "CAST")
+    flareon = Pokemon("FLAREON", 100, "==========", "FIRE", "FIRE SLASH", "BLAZE BALL", "CAST", "brelm.png")
+    breloom = Pokemon("BRELOOM", 100, "==========", "GRASS", "RAZOR LEAF", "SPIT POISON", "CAST", "brelm.png")
+    magikarp = Pokemon("MAGIKARP", 100, "==========", "WATER", "KARATE CHOP", "SUBMERGE", "CAST", "brelm.png")
     pokemons = [flareon, breloom, magikarp]
 
     return pokemons
