@@ -187,13 +187,20 @@ class PageTwo(tk.Frame):
 
         tk.Frame.__init__(self, parent)
 
+        # Background Image Created and placed into file
+        battleBackgroundImage = tk.PhotoImage(file="topGround.png")  # update values
+        battleBackgroundLabel = tk.Label(self, image=battleBackgroundImage)
+        battleBackgroundLabel.photo = battleBackgroundImage
+        battleBackgroundLabel.place(relwidth=1, relheight=1)
+
         # affects only the text box inside
         frame = tk.Frame(self, bd=20)  # no background added
         frame.place(relx=0.1, rely=0.8, relwidth=0.8, relheight=0.8)
 
         # lower frame - below entry and button
-        battleFrame = tk.Frame(self, bg='#80c1ff', bd=10)
+        battleFrame = tk.Frame(self)
         battleFrame.place(relx=0.5, rely=0.1, relwidth=0.75, relheight=0.6, anchor='n')
+
 
         # creates fonts - with size in px
         # puts into left with border
@@ -201,6 +208,10 @@ class PageTwo(tk.Frame):
                          bd=4)  # inside lowerframe, and remains within border of frame, and fills completely
         # places off by 0.3 from button, width is greater, height same
         label.place(relwidth=1, relheight=1)
+
+        nextButton = tk.Button(frame, text="Next", font=LARGE_FONT,
+                               command=lambda: controller.show_frame(PageThree))  # goes back to start page
+        nextButton.place(relx=0.8, relwidth=0.2, relheight=0.2)
 
         # PLAYER OBJECT INSTANTIATED - User enters chosen pokemon
         def getChosenPokemon(entry):
@@ -222,20 +233,18 @@ class PageTwo(tk.Frame):
                     playerChosenLabel = tk.Label(frame, text=textPlayer, font=LARGE_FONT)
                     playerChosenLabel.pack()
 
-                    nextButton.configure(state='normal')
                     entryButton.configure(state='disabled')
-
+                    nextButton.configure(state='normal')
 
                 else:
                     raise AssertionError
 
             except AssertionError:
-                print("error raised")
+                print("Incorrect Entry Type. Enter 1-3")
                 nextButton.configure(state='disabled')
 
             except ValueError:
-                print("incorrect value type.")
-
+                print("Incorrect Value Type. Enter a number.")
         # ENEMY OBJECT INSTANTIATED
         # needs to be global in order to be accessed throughout GUI and non-gui classes and functions
         global enemyPokemonChosen
@@ -243,7 +252,6 @@ class PageTwo(tk.Frame):
 
         # ENEMY POKEMON IMAGE
         pokemonEnemyImage = tk.PhotoImage(file=enemyPokemonChosen.image)
-        print(enemyPokemonChosen.image)  # update values
         pokemonEnemySprite = tk.Label(battleFrame, image=pokemonEnemyImage)
         pokemonEnemySprite.photo = pokemonEnemyImage
         pokemonEnemySprite.place(relx=0.7, relwidth=0.3,relheight=1)
@@ -257,12 +265,7 @@ class PageTwo(tk.Frame):
                            command=lambda: getChosenPokemon(entry.get()))  # DISPLAYS ENTRY text
         entry.insert(0, "Enter #")
 
-        entryButton.place(relx=0.8, relwidth=0.2, relheight=0.2)
-
-        nextButton = tk.Button(frame, text="Next", font=LARGE_FONT,
-                            command=lambda: controller.show_frame(PageThree))  # goes back to start page
-        nextButton.place(relwidth=0.2, relheight=0.2)
-
+        entryButton.place(relwidth=0.2, relheight=0.2)
 
 
         # Display enemyChosen Label
@@ -276,14 +279,18 @@ class PageThree(PageTwo,tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        label = tk.Label(self, text="Battle Begins!", font=LARGE_FONT)
-        label.pack(pady=10, padx=10)
+        # Background Image Created and placed into file
+        beginBtleImage = tk.PhotoImage(file="battleBegins.png")  # update values
+        beginBattleLabel = tk.Label(self, image=beginBtleImage)
+        beginBattleLabel.photo = beginBtleImage
+        beginBattleLabel.place(relwidth=1, relheight=1)
 
-        # button to say exit out of main loop!
-        #button = tk.Label(self, text="Quit", command=lambda: closeWindow())
-        button = tk.Button(self, text="Quit", command=controller.quit)
+        quitButtonPhoto = tk.PhotoImage(file="enterBattleButton.png")  # update values
 
-        button.pack(pady=20, padx=20)
+        quitButton = tk.Button(self, command=controller.quit, image=quitButtonPhoto)
+        quitButton.photo = quitButtonPhoto
+        quitButton.pack(side="bottom", pady=140)
+
 
 
 # when adding new information - create lamda functions which will call game functions in order to run forward
@@ -292,9 +299,9 @@ class PageThree(PageTwo,tk.Frame):
 # *********** INSTANCE Functions - Pokemon Lists ***********
 def playerPokemonList():
     # *stores all instances of existing pokemon - can create seperate functions for enemy pokemon and player pokemon
-    charmander = Pokemon("CHARMANDER", 100, "==========", "FIRE", "FLAMETHROWER", "FIRE SPIN", "CAST","bulba.png")
+    charmander = Pokemon("CHARMANDER", 100, "==========", "FIRE", "FLAMETHROWER", "FIRE SPIN", "CAST","char.png")
     bulbasaur = Pokemon("BULBASAUR", 100, "==========", "GRASS", "VINE WHIP", "LEECH SEED", "CAST", "bulba.png")
-    squirtle = Pokemon("SQUIRTLE", 100, "==========", "WATER", "WATER SPLASH", "AQUA TAIL", "CAST", "bulba.png")
+    squirtle = Pokemon("SQUIRTLE", 100, "==========", "WATER", "WATER SPLASH", "AQUA TAIL", "CAST", "squrt.png")
     pokemons = [charmander, bulbasaur, squirtle]
 
     return pokemons
@@ -302,9 +309,9 @@ def playerPokemonList():
 
 def enemyPokemonList():
     # *stores all instances of existing pokemon - can create seperate functions for enemy pokemon and player pokemon
-    flareon = Pokemon("FLAREON", 100, "==========", "FIRE", "FIRE SLASH", "BLAZE BALL", "CAST", "brelm.png")
+    flareon = Pokemon("FLAREON", 100, "==========", "FIRE", "FIRE SLASH", "BLAZE BALL", "CAST", "flare.png")
     breloom = Pokemon("BRELOOM", 100, "==========", "GRASS", "RAZOR LEAF", "SPIT POISON", "CAST", "brelm.png")
-    magikarp = Pokemon("MAGIKARP", 100, "==========", "WATER", "KARATE CHOP", "SUBMERGE", "CAST", "brelm.png")
+    magikarp = Pokemon("MAGIKARP", 100, "==========", "WATER", "KARATE CHOP", "SUBMERGE", "CAST", "magi.png")
     pokemons = [flareon, breloom, magikarp]
 
     return pokemons
