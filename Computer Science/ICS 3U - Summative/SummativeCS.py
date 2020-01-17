@@ -55,7 +55,7 @@ canvas = tk.Canvas(root, height=HEIGHT, width=WIDTH)
 canvas.pack()
 
 # CREATING BACKGROUND IMAGE
-backgroundImage = tk.PhotoImage(file="battleGround.png")
+backgroundImage = tk.PhotoImage(file="battleScreen.png")
 backgroundLabel = tk.Label(root, image=backgroundImage)
 backgroundLabel.place(relwidth=1, relheight=1)
 
@@ -68,14 +68,13 @@ frame.place(relx=0.1, rely=0.8, relwidth=0.8, relheight=0.8)
 label = tk.Label(frame,font=("Courier", 17), text="Welcome to Python Pokemon!") # no background added
 label.place(relx=0.3, rely=0, relwidth=0.45, relheight=0.25)
 
-'''
+
 def delay_print(s):
-    1.24 - allows to print characters one by one, in order to emulate fashion in game!
+    # 1.24 - allows to print characters one by one, in order to emulate fashion in game!
     for c in s:
         sys.stdout.write(c)
         sys.stdout.flush()
         time.sleep(0.05)
-'''
 
 
 # *********** CLASS OBJECTS ***********
