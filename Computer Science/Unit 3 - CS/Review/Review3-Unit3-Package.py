@@ -43,7 +43,7 @@ while go == True:
         go == True
         if num == "Done":
             print(num)
-            go == False
+            go = False
             break
 
 print("The average of these numbers is:", round(average, 2))

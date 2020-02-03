@@ -81,9 +81,9 @@ def getRadius():
     while True:
         try:
             radius = float(input("Enter the radius of the circle: "))
-            break
-
+            
             assert radius > 0 # statement to test if it is true,(see if radius is pos/neg)
+            break
 
         except AssertionError: #when tested assertion as false
           print("The value must be positive.")
